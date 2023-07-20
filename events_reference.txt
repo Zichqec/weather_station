@@ -1,0 +1,165 @@
+This information should also be vailable on the external SHIORI events page of Ukadoc! http://ssp.shillest.net/ukadoc/manual/list_shiori_event_ex.html
+
+—————————— OnWeatherStation.Weather ——————————
+
+reference0: Weather condition. Please download this file https://www.weatherapi.com/docs/weather_conditions.xml for the full list of condition names.
+reference1: Weather condition icon filename. This can be used if you download weatherapi's weather icons from here https://cdn.weatherapi.com/weather.zip
+reference2: Weather condition code. See the file linked in reference0 for the codes.
+reference3: "Is it daytime". 1 if the sun is up, 0 if the sun is down.
+reference4: Temperature in Fahrenheit.
+reference5: Temperature in Celsius.
+reference6: "Feels like" temperature in Fahrenheit.
+reference7: "Feels like" temperature in Celsius.
+reference8: Humidity as a percentage.
+reference9: Wind speed in mph.
+reference10: Wind speed in kph.
+reference11: Wind direction as a 16 point compass (e.g.: NNE for north/northeast).
+reference12: Wind direction in degrees.
+reference13: Wind gust speed in mph.
+reference14: Wind gust speed in kph.
+reference15: Precipitation in inches.
+reference16: Precipitation in millimeters.
+reference17: Cloud cover as a percentage.
+reference18: "Will it rain today", 1 if yes, 0 if no. Same information as the forecast will it rain for the current day.
+reference19: Chance of rain today, as a percentage. Same information as the forecast chance of rain for the current day.
+reference20: "Will it snow today", 1 if yes, 0 if no. Same information as the forecast will it snow for the current day.
+reference21: Chance of snow today, as a percentage. Same information as the forecast chance of snow for the current day.
+reference22: Visibility in miles.
+reference23: Visibility in kilometers.
+reference24: Pressure in inches.
+reference25: Pressure in millibars.
+reference26: UV index.
+reference27: CO (Carbon Monoxide) in μg/m3 (Micrograms per cubic meter).
+reference28: O3 (Ozone) in μg/m3 (Micrograms per cubic meter).
+reference29: NO2 (Nitrogen Dioxide) in μg/m3 (Micrograms per cubic meter).
+reference30: SO2 (Sulfur Dioxide) in μg/m3 (Micrograms per cubic meter).
+reference31: PM2.5 (Particulate Matter smaller than 2.5 microns in diameter) in μg/m3 (Micrograms per cubic meter).
+reference32: PM10 (Particulate Matter smaller than 10 microns in diameter) in μg/m3 (Micrograms per cubic meter).
+reference33: US EPA index. 1 means Good, 2 means Moderate, 3 means Unhealthy for sensitive group, 4 means Unhealthy, 5 means Very unhealthy, 6 means Hazardous.
+reference34: UK Defra Index. See weatherapi.com's documentation for the table of possible values and what they mean.
+reference35: The time the plugin last updated the weather data, in seconds since EPOCH (1970/1/1 00:00:00).
+reference36: The current version number of the plugin.
+reference37: The user's choice of units (Imperial or Metric).
+reference38: The user's location name. Only available if the user has chosen to share their location data.
+reference39: The url for the user's location, to be used with the API. Only available if the user has chosen to share their location data.
+reference40: The user's latitude. Only available if the user has chosen to share their location data.
+reference41: The user's longitude. Only available if the user has chosen to share their location data.
+
+
+—————————— OnWeatherStation.Astro ——————————
+
+reference0: The day the following information is for. 0 for today, 1 for tomorrow, 2 for the day after tomorrow.
+reference1: Sunrise time, given as 12 hour time with the format ##:## *M
+reference2: Sunset time, given as 12 hour time with the format ##:## *M
+reference3: Moonrise time, given as 12 hour time with the format ##:## *M
+reference4: Moonset time, given as 12 hour time with the format ##:## *M
+reference5: Sunrise time, given as 24 hour time with the format ##:##
+reference6: Sunset time, given as 24 hour time with the format ##:##
+reference7: Moonrise time, given as 24 hour time with the format ##:##
+reference8: Moonset time, given as 24 hour time with the format ##:##
+reference9: Moon phase as a string. Can be "New Moon", "Waxing Crescent". "First Quarter", "Waxing Gibbous", "Full Moon", "Waning Gibbous", "Last Quarter", or "Waning Crescent".
+reference10: Moon phase number.
+	0 - New Moon
+	1 - Waxing Crescent
+	2 - First Quarter
+	3 - Waxing Gibbous
+	4 - Full Moon
+	5 - Waning Gibbous
+	6 - Last Quarter
+	7 - Waxing Crescent
+reference11: Moon illumination as a percentage.
+
+
+—————————— OnWeatherStation.Alerts ——————————
+
+reference*: An array containing information for a weather alert. NOT ALL FIELDS WILL BE FILLED. Fields are separated by a 1 byte value (C_BYTE1 in YAYA), since the descriptions sometimes contain commas. Information is listed in this order:
+	[0] - Headline.
+	[1] - Type of alert.
+	[2] - Severity.
+	[3] - Urgency.
+	[4] - Areas covered.
+	[5] - Category.
+	[6] - Certainty.
+	[7] - Event.
+	[8] - Note.
+	[9] - Effective time.
+	[10] - Expires time.
+	[11] - Description.
+	[12] - Instructions.
+	
+Please see weatherapi's documentation on weather alerts for more information (I have no idea what half of these mean either).
+
+
+—————————— OnWeatherStation.Forecast.Day ——————————
+
+reference0: The day the information is for. 0 for today, 1 for tomorrow, 2 for the day after tomorrow.
+reference1: Maximum temperature for the day, in Fahrenheit.
+reference2: Maximum temperature for the day, in Celsius.
+reference3: Minimum temperature for the day, in Fahrenheit.
+reference4: Minimum temperature for the day, in Celsius.
+reference5: Average temperature for the day, in Fahrenheit.
+reference6: Average temperature for the day, in Celsius.
+reference7: Average humidity for the day, as a percentage.
+reference8: Maximum windspeed for the day, in mph.
+reference9: Maximum windspeed for the day, in kph.
+reference10: Total precipitation for the day, in inches.
+reference11: Total precipitation for the day, in millimeters.
+reference12: "Will it rain this day", 1 if yes, 0 if no.
+reference13: Chance that it will rain this day, as a percentage.
+reference14: "Will it snow this day", 1 if yes, 0 if no.
+reference15: Chance that it will snow this day, as a percentage.
+reference16: Average visiblity for the day, in miles.
+reference17: Average visiblity for the day, in kilometers.
+
+
+—————————— OnWeatherStation.Forecast.Hourly ——————————
+
+reference0-23: An array containing forecast information for the hour matching the reference number. (reference0 for 00:00/12AM, reference 14 for 14:00/2PM.) Information is listed in this order:
+	[0] - Date and time the information is for.
+	[1] - "Is it daytime". 1 if the sun is up, 0 if the sun is down.
+	[2] - Temperature in Fahrenheit.
+	[3] - Temperature in Celsius.
+	[4] - "Feels like" temperature in Fahrenheit.
+	[5] - "Feels like" temperature in Celsius.
+	[6] - Humidity as a percentage.
+	[7] - Wind speed in mph.
+	[8] - Wind speed in kph.
+	[9] - Wind direction as a 16 point compass (e.g.: NNW for north/northwest).
+	[10] - Wind direction in degrees.
+	[11] - Wind gusts in mph.
+	[12] - Wind gusts in kph.
+	[13] - Precipitation in inches.
+	[14] - Precipitation in millimeters.
+	[15] - Cloud cover as a percentage.
+	[16] - "Will it rain", 1 if yes, 0 if no.
+	[17] - Chance of rain as a percentage.
+	[18] - "Will it snow", 1 if yes, 0 if no.
+	[19] - Chance of snow as a percentage.
+	[20] - Visibility in miles.
+	[21] - Visibility in kilometers.
+	[22] - Wind chill in Fahrenheit.
+	[23] - Wind chill in Celsius.
+	[24] - Heat index in Fahrenheit.
+	[25] - Heat index in Celsius.
+	[26] - Dew point in Fahrenheit.
+	[27] - Dew point in Celsius.
+	[28] - Pressure in inches.
+	[29] - Pressure in millibars.
+	[30] - UV index.
+reference24: The day the information is for. 0 for today, 1 for tomorrow, 2 for the day after tomorrow.
+
+
+—————————— OnWeatherStation.Error ——————————
+
+reference0: The error message. Possible messages are:
+	"no_location" for if the user has not entered a location.
+	"location_invalid" for if the user's location is invalid and cannot return any weather.
+	"api_quota_exceeded" for if the 1 million free API calls have run out for the month.
+	"api_key_disabled" for if I ever have to disable the API key.
+	"api_internal_error" for if the API has an error on its end.
+	"no_api_response" for if the API does not respond at all.
+	"other" for any other error. reference1 will have the proper error message in this case. But this should not come up.
+reference1: A more verbose error message. THIS DOES NOT MATCH THE MESSAGES ON weatherapi.com's DOCUMENTATION. I could not find a list of what the error messages would actually be.
+reference2: The error code, as listed on weatherapi.com's documentation.
+reference3: The time the plugin last attempted to update the weather data, in seconds since EPOCH (1970/1/1 00:00:00).
+reference4: The current version number of the plugin.

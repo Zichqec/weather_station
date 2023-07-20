@@ -1,0 +1,1167 @@
+// **** usage ****
+//
+// The function name is the same as the event name; there is no On_ prefix when getting a string, as in the SHIORI/3.0 template.
+//
+// If it returns a value, it will be executed as SakuraScript
+// You can control the behavior by assigning the following variables.
+// res_event
+// res_event , res_reference[0]... [n].
+// The specified event will be fired with reference. reference is optional.
+//
+// res_target
+// Specifies to which ghost the script or event should be sent.
+// Specify the Sakura name. Also, __SYSTEM_ALL_GHOST__ will notify all running ghosts.
+// If omitted, it will be sent to the ghost that executed the plugin menu.
+//
+// res_marker
+// You can specify the text to be displayed on the balloon's marker (the small status indicator at the bottom).
+// res_event_option
+// res_event_option / res_script_option
+// Set the EventOption / ScriptOption header, respectively.
+//
+// See the plugin specification for details.
+// http://emily.shillest.net/specwiki/index.php?PLUGIN%2F2.0%2F%E4%BB%95%E6%A7%98%E6%9B%B8
+
+
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
+//Glad you find it interesting/useful! This plugin is entirely open source and you are free to take the code in main.dic and envelopes.dic and use it in your own ghosts. The other files come with YAYA as Plugin, so I can't speak for those. I would appreciate a link back to me (https://zichqec.github.io/s-the-skeleton/) if you use my work!
+//Please note that the weather API I used only gets 1 million free API calls a month, so PLEASE DO NOT USE MY API KEY! I'm already worried about the number of API calls I might rack up from multiple people running this plugin and getting the weather every hour that SSP is open! Plus, you don't want to have to worry about your ghost running out of API calls because of my plugin, do you?
+//You can get your own API key COMPLETELY FREE by signing up for an account on weatherapi.com, here https://www.weatherapi.com/
+//If you're not sure what to do, get in contact and I will gladly help you out! Thanks!
+#define __API_KEY__ 08f40be4a6fb4edd9d361756211508
+
+#define	C_BYTE1		CHR(0x1)
+
+//I think this happens any time the plugin is loaded, as the name would imply. Probably when SSP starts?
+PluginLoad
+{
+	Info.update_available = 0
+	
+	Info.error_code = ""
+	Info.error_message = ""
+	Info.Send_Weather_Now = 0
+	//TODO probably need the other variables here as well?
+	foreach CurrentWeatherTags; _var
+	{
+		EVAL("Weather.%(REPLACE(_var,'-','_')) = ''")
+	}
+	OnGetCurrentWeather
+	CheckForUpdates
+}
+
+OnTestThing
+{
+	//UserInfo.location = "a place"
+	//UserInfo.location_url = "sdkjfhsdkjfhskfdj"
+	"\![open,readme,Weather Station]"
+	--
+	OnMenuExec
+}
+
+//I think this happens any time the plugin is unloaded, as the name would imply. Probably when SSP closes?
+PluginUnload
+{
+	Info.update_available = 0
+	Info.Send_Weather_Now = 0
+	ClearWeatherData
+	ClearErrors
+}
+
+CheckForUpdates
+{
+	Info.update_available = 0
+	_t = FUNCTIONEX("saori/httpc.dll","https://zichqec.github.io/s-the-skeleton/weatherregex")
+	_ver = SPLIT(_t,"WEATHER_STATION_VER--")[1]
+	_ver = SPLIT(_ver,"--WEATHER_STATION_VER")[0]
+	if _ver != version_num; Info.update_available = 1
+	LOGGING(_ver)
+	LOGGING(version_num)
+}
+
+ClearWeatherData
+{
+	// ERASEVAR("Weather.condition")
+	// ERASEVAR("Weather.condition_icon")
+	// ERASEVAR("Weather.condition_code")
+	// ERASEVAR("Weather.alerts")
+	 Info.Send_Weather_Now = 0
+	// foreach CurrentWeatherTags; _var
+	// {
+		// ERASEVAR("Weather.%(REPLACE(_var,'-','_'))")
+	// }
+	LOGGING("====================================================================")
+	LOGGING("VARS BEFORE")
+	LOGGING(GETVARLIST)
+	
+	_varlist = IARRAY
+	_varlist ,= GETVARLIST("Weather.")
+	_varlist ,= GETVARLIST("Forecast.")
+	
+	foreach _varlist; _var
+	{
+		ERASEVAR("%(_var)")
+		
+	}
+	LOGGING("====================================================================")
+	LOGGING("VARS AFTER")
+	LOGGING(GETVARLIST)
+}
+
+ClearErrors
+{
+	ERASEVAR("Info.error_code")
+	ERASEVAR("Info.error_message")
+}
+
+//This function is called when the user clicks on the plugin through the right click menu
+OnMenuExec : all
+{
+	//This sets up the little 'Weather Station v(version) in the balloon, so the user knows what this is
+	res_marker = version
+	
+	//Set some defaults
+	_location = "(Not set)"
+	if UserInfo.location != ""; _location = UserInfo.location
+	
+	if !ISVAR("Settings.share_location"); Settings.share_location = "Off"
+	if !ISVAR("Settings.units"); Settings.units = "Imperial"
+	if !ISVAR("Settings.short_numbers"); Settings.short_numbers = "On"
+	
+	_metric = Settings.units == "Metric"
+
+	if !ISVAR("Settings.weather_interval"); Settings.weather_interval = 60
+
+	
+	"\0\b2\_q\*\![set,autoscroll,disable]\![close,inputbox,OnWeatherLocation]"
+	"\f[align,center]—Weather Station—\n\n[half]\f[align,default]"
+	
+	if Info.update_available; "\![*]\_a[OnWeatherStationUpdate]An update is available!\_a\n\n[half]"
+	
+	//"\q[Testvar,OnTestThing]"
+	//"\n\q[Display All Vars,OnVarDisplay]\n\n"
+
+	
+	if HasWeatherData || Info.error_code != ""
+	{
+		"\![*]"
+		if ARRAYSIZE(Weather.alerts) >= 1
+		{
+			"\_a[OnWeatherAlertMenu,0]Weather alerts\_a (%(ARRAYSIZE(Weather.alerts)))"
+		}
+		else
+		{
+			"\f[color,disable]Weather alerts (0)\f[color,default]"
+		}
+		"\n\![*]\__q[OnForecastMenu.Daily]Forecast\__q  \![*]\__q[OnAstronomyMenu]Astronomy\__q    %(MoonIcon)"
+		
+		//"\_l[,@-1em]          %(MoonIcon)\n"
+	}
+	
+	
+	if _location != "(Not set)"; "\n\![*]\__q[OnCurrentWeather_ForceUpdate]Refresh weather data\__q"
+	
+	//Last updated display
+	if HasWeatherData || Info.error_code != ""
+	{
+		"\nLast updated \f[anchorstyle,none]\_a[-]"
+		if _metric; "%(Info.last_update[0])"
+		else; "%(Info.last_update[1])"
+		":%(Info.last_update[2]) "
+		if !_metric; "%(Info.last_update[4])" //am/pm
+	}
+	"\_a\f[anchorstyle,default]\n[half]"
+	"\n\![*]\__q[OnSettingsMenu]Settings\__q"
+	"\n\n"
+
+	//"Lat: %(UserInfo.latitude)  Lon: %(UserInfo.longitude)\n%(GETTYPE(UserInfo.latitude))"
+	if !(Info.error_code == "" || Info.error_code == "1003") //1003 is no location
+	{
+		"Error: %(Info.error_code)\n%(Info.error_message)\n\n"
+	}
+	elseif HasWeatherData
+	{
+		//Current weather display
+		"Current weather:\n\n[half]\f[anchorstyle,none]"
+		
+		"\_a[-]%(Weather.condition)\_a\n" //\_b[http:%(Weather.condition_icon)]
+		
+		if _metric; "Temperature: \_a[-]%(Weather.temp_c)°C\_a\nFeels like: \_a[-]%(Weather.feelslike_c)°C\_a\n"
+		else; "Temperature: \_a[-]%(Weather.temp_f)°F\_a\nFeels like: \_a[-]%(Weather.feelslike_f)°F\_a\n"
+		
+		//"Temperature: \_a[-]" + ("%(Weather.temp_f)°F\_a\nFeels like: \_a[-]%(Weather.feelslike_f)°F","%(Weather.temp_c)°C\_a\nFeels like: \_a[-]%(Weather.feelslike_c)°C")[_metric] + "\_a\n"
+		
+		"Humidity: \_a[-]%(Weather.humidity)%\_a\n"
+		
+		if _metric; "Wind speed: \_a[-]%(Weather.wind_kph) kph\_a, \_a[-]%(Weather.wind_dir)\_a (\_a[-]%(Weather.wind_degree)°\_a)\n"
+		else; "Wind speed: \_a[-]%(Weather.wind_mph)mph\_a, \_a[-]%(Weather.wind_dir)\_a (\_a[-]%(Weather.wind_degree)°\_a)\n"
+		
+		if _metric; "Gusts: \_a[-]%(Weather.gust_kph) kph\_a\n"
+		else; "Gusts: \_a[-]%(Weather.gust_mph)mph\_a\n"
+		
+		"Chance of rain: \_a[-]"; EVAL("Forecast.0.Day.daily_chance_of_rain") + "%"; "\_a\n"
+		"Chance of snow: \_a[-]"; EVAL("Forecast.0.Day.daily_chance_of_snow") + "%"; "\_a\n"
+		
+		if _metric; "Precipitation: \_a[-]%(Weather.precip_mm) mm\_a\n"
+		else; "Precipitation: \_a[-]%(Weather.precip_in) inches\_a\n"
+		
+		if _metric; "Visibility: \_a[-]%(Weather.vis_km) km\_a\n"
+		else; "Visibility: \_a[-]%(Weather.vis_miles) miles\_a\n"
+		
+		"Cloud cover: \_a[-]%(Weather.cloud)%\_a\n"
+		
+		"UV Index: \_a[-]%(Weather.uv)\_a\n"
+		
+		if _metric; "Pressure: \_a[-]%(Weather.pressure_mb) mb\_a\n"
+		else; "Pressure: \_a[-]%(Weather.pressure_in) inches\_a\n"
+		
+		//Air Quality Index
+		_aq_items = ("co","o3","no2","so2","pm2_5","pm10")
+		_co = ""
+		_o3 = ""
+		_no2 = ""
+		_so2 = ""
+		_pm2_5 = ""
+		_pm10 = ""
+		
+		//This is for making the numbers short because dear god they are so many digits long???????
+		foreach _aq_items; _item
+		{
+			void EVAL("_%(_item) = Weather.%(_item)")
+			if Settings.short_numbers == "On"
+			{
+				void EVAL("_temp = _%(_item)")
+				if "." _in_ _temp; _temp = _temp[0,"."] + "." + SUBSTR(_temp[1,"."],0,2)
+				void EVAL("_%(_item) = _temp")
+			}
+		}
+		
+		"\nAir quality:  \f[anchorstyle,default](\![*]\_a[OnShortNumbersToggle]Short Numbers %(Settings.short_numbers)\_a)\f[anchorstyle,none]\n\n[half]"
+		"Carbon Monoxide: \_a[-]%(_co)\_a\n"
+		"Ozone: \_a[-]%(_o3)\_a\n"
+		"Nitrogen Dioxide: \_a[-]%(_no2)\_a\n"
+		"Sulphur Dioxide: \_a[-]%(_so2)\_a\n"
+		"PM2.5: \_a[-]%(_pm2_5)\_a\n"
+		"PM10: \_a[-]%(_pm10)\_a\n"
+		"US EPA standard: \_a[-]%(Weather.us_epa_index)\_a\n"
+		"UK Defra Index: \_a[-]%(Weather.gb_defra_index)\_a\n"
+		//"Pollen: " //no pollen for now :( if someone knows of a good (free) pollen API please tell me!!
+	}
+	elseif _location == "(Not set)"
+	{
+		"\![*]\_a[OnChangeLocation]Set a location\_a\n"
+	}
+	
+	"\n\![*]\q[Close,OnCancel]\n\n"
+	
+	"\f[height,-2]\f[anchorstyle,default]\![*]Powered by \_a[https://www.weatherapi.com/]WeatherAPI.com\_a\e"
+}
+
+OnWeatherStationUpdate
+{
+	res_marker = version
+	
+	"\0\b2\_q\![set,autoscroll,disable]\f[anchorstyle,none]Weather Station will attempt to update. Most ghosts do not have dialogue for plugin updates; please run the plugin again once the update is complete. You can update manually by opening the Ghost Explorer with \_a[-]Ctrl + E\_a, changing the \_a[-]Type\_a tab to \_a[-]Plugin\_a, and right clicking on \_a[-]Weather Station\_a. The \_a[-]Network Update\_a option will update the plugin.\n\nThe latest version of Weather Station can always be downloaded from \_a[https://zichqec.github.io/s-the-skeleton/]Zichqec's website\_a.\n\nClick to continue...\x\![updateother,--plugin=Weather Station]Updating...\e"
+}
+
+//Menu for location, units, and if you want to let ghosts see your location data
+OnSettingsMenu : all
+{
+	res_marker = version
+	
+	_location = "(Not set)"
+	if UserInfo.location != ""; _location = UserInfo.location
+	
+	"\0\*\_q\b2\![set,autoscroll,disable]"
+	"\f[align,center]—Settings—\n \f[align,default]\n"
+	//"Send: %(Info.Send_Weather_Now)\n"
+	"Location: \![*]\_a[OnChangeLocation]%(_location)\_a"
+
+	if _location != "(Not set)"; " \__q[OnExpungeLocationData](Remove)\__q"
+	"\n\nLet ghosts see location data: \![*]\_a[OnToggleLocationData]%(Settings.share_location)\_a\n"
+	"\nUnits: \![*]\_a[OnUnitsToggle]%(Settings.units)\_a\n"
+	//"Update every \![*]\_a[OnWeatherInterval,%(Settings.weather_interval)]%(Settings.weather_interval)\_a  minutes\n"
+	"\n\n\![*]\q[Back,OnMenuExec]"
+}
+
+OnTest_httpc
+{
+	_api = FUNCTIONEX("saori/httpc.dll","https://api.weatherapi.com/v1/current.xml?key=__API_KEY__&q=%(UserInfo.location_url)")
+	_api
+}
+
+//If you want to see how much data this thing is actually dealing with... try this lol
+OnVarDisplay
+{
+	_list = GETVARLIST("Forecast")
+	// foreach _list; _item
+	// {
+		// ERASEVAR(_item)
+	// }
+	// GETVARLIST("Forecast")
+	
+	
+	_display = ""
+	foreach _list; _item
+	{
+		_display += "%(_item): " + EVAL("%(_item)") + "\n"
+	}
+	"\![set,autoscroll,0]\b[2]\_q%(ARRAYSIZE(_list))\n\n%(_display)\x"
+}
+
+//Removes all of the user's location data completely
+OnExpungeLocationData
+{
+	ClearWeatherData
+	ClearErrors
+	ERASEVAR("UserInfo.location")
+	ERASEVAR("UserInfo.location_url")
+	ERASEVAR("UserInfo.latitude")
+	ERASEVAR("UserInfo.longitude")
+	--
+	"\![raiseplugin,Weather Station,OnSettingsMenu]"
+}
+
+OnUnitsToggle
+{
+	if Settings.units != "Imperial"; Settings.units = "Imperial"
+	else; Settings.units = "Metric"
+	OnSettingsMenu
+}
+
+OnToggleLocationData
+{
+	if Settings.share_location != "Off"; Settings.share_location = "Off"
+	else; Settings.share_location = "On"
+	OnSettingsMenu
+}
+
+OnShortNumbersToggle
+{
+	if Settings.short_numbers != "On"; Settings.short_numbers = "On"
+	else; Settings.short_numbers = "Off"
+	OnMenuExec
+}
+
+//Change how often the weather auto-updates - removed this option because I'm pretty sure the API only updates every 15 minutes or so, and I am also worried about API calls...
+OnWeatherInterval
+{
+	_interval = 60
+
+	if reference[0] == "60"; _interval = 30
+	elseif reference[0] == "30"; _interval = 15
+	elseif reference[0] == "15"; _interval = 10
+	//If it's 10/none of those, make it 60
+
+	Settings.weather_interval = _interval
+	OnSettingsMenu
+}
+
+//Weather check from the plugin's menu, activated by user
+OnCurrentWeather_ForceUpdate
+{
+	OnGetCurrentWeather
+	--
+	//"\C\_w[1]"
+
+	"\![raiseplugin,Weather Station,OnMenuExec]"
+}
+
+//Maximum number of days in the forecast, counting from 0. So this is 3 days, since that is what the free API allows.
+#define MAXDAY 2
+
+//Daily forecast menu, lets the user go back and forth between days and also switch to the hourly menu
+OnForecastMenu.Daily : all
+{
+	res_marker = version
+	_day = reference[0]
+	if _day == ""; _day = 0
+	_metric = Settings.units == "Metric"
+	
+	//Making a nice date display
+	_YMD = EVAL("Forecast.%(_day).Day.date")
+	
+	_DMY = _YMD[2,"-"] + "-" + _YMD[1,"-"] + "-" + _YMD[0,"-"]
+	_MDY = TOINT(_YMD[1,"-"]) + "-" + _YMD[2,"-"] + "-" + _YMD[0,"-"] //Hoping the TOINT here removes any leading 0s lol
+	
+	"\0\b2\_q\*\![set,autoscroll,disable]"
+	("\q[<<,OnPreviousForecastDay,%(_day)]","\f[color,disable]<<\f[color,default]")[_day <= 0]
+	
+	"%(newline)\f[align,center]"
+	
+	(_MDY,_DMY)[_metric]
+	
+	//("Today","Tomorrow","%(nowday(2))")[_day]
+	
+	"%(newline)\f[align,right]"
+	
+	("\q[>>,OnNextForecastDay,%(_day)]","\f[color,disable]>>\f[color,default]")[_day >= MAXDAY]
+	
+	"\n \n\f[align,default]\f[anchorstyle,none]"
+	
+	//These EVALS are using a sort of pseudo ternary operator, to try and make things a bit cleaner. Need EVAL here so that I don't have to write all those var names manually for each forecast day...
+	"Max temp: \_a[-]"; EVAL(("Forecast.%(_day).Day.maxtemp_f + '°F'","Forecast.%(_day).Day.maxtemp_c + '°C'")[_metric]); "\_a\n"
+	"Min temp: \_a[-]"; EVAL(("Forecast.%(_day).Day.mintemp_f + '°F'","Forecast.%(_day).Day.mintemp_c + '°C'")[_metric]); "\_a\n"
+	"Average temp: \_a[-]"; EVAL(("Forecast.%(_day).Day.avgtemp_f + '°F'","Forecast.%(_day).Day.avgtemp_c + '°C'")[_metric]); "\_a\n"
+	"Average humidity: \_a[-]"; EVAL("Forecast.%(_day).Day.avghumidity") + "%"; "\_a\n"
+	"Max wind speed: \_a[-]"; EVAL(("Forecast.%(_day).Day.maxwind_mph + 'mph'","Forecast.%(_day).Day.maxwind_kph + ' kph'")[_metric]); "\_a\n"
+	"\n"
+	"Total precipitation: \_a[-]"; EVAL(("Forecast.%(_day).Day.totalprecip_in + ' inches'","Forecast.%(_day).Day.totalprecip_mm + ' mm'")[_metric]); "\_a\n"
+	"Chance of rain: \_a[-]"; EVAL("Forecast.%(_day).Day.daily_chance_of_rain") + "%"; "\_a\n"
+	"Chance of snow: \_a[-]"; EVAL("Forecast.%(_day).Day.daily_chance_of_snow") + "%"; "\_a\n"
+	"Average Visibility: \_a[-]"; EVAL(("Forecast.%(_day).Day.avgvis_miles + ' miles'","Forecast.%(_day).Day.avgvis_km + ' km'")[_metric]); "\_a\n\n"
+	
+	//Astronomy info display, handled below
+	AstronomyDisplay(_day)
+	
+	
+	"\n\n\![*]\q[Hourly forecast,OnForecastMenu.Hourly,%(reference[0])]"
+	"\n\![*]\q[Back,OnMenuExec]\e"
+}
+
+OnPreviousForecastDay
+{
+	reference[0]--; if reference[0] < 0; reference[0] = 0
+	"\![raiseplugin,Weather Station,OnForecastMenu.Daily,%(reference[0])]"
+}
+
+OnNextForecastDay
+{
+	reference[0]++; if reference[0] > MAXDAY; reference[0] = MAXDAY
+	"\![raiseplugin,Weather Station,OnForecastMenu.Daily,%(reference[0])]"
+}
+
+//Similar to the above, but handling the hour-by-hour.
+OnForecastMenu.Hourly : all
+{
+	res_marker = version
+	
+	_day = reference[0]
+	if _day == ""; _day = 0
+	
+	_hour = reference[1]
+	if _hour == ""; _hour = 0
+	
+	_metric = Settings.units == "Metric"
+	
+	//Setting all the variables beforehand this time since there are so dang many
+	_time = EVAL("Forecast.%(_day).Hour.%(_hour)[0]")
+	_is_day = EVAL("Forecast.%(_day).Hour.%(_hour)[1]")
+	_temp_f = EVAL("Forecast.%(_day).Hour.%(_hour)[2]")
+	_temp_c = EVAL("Forecast.%(_day).Hour.%(_hour)[3]")
+	_feelslike_f = EVAL("Forecast.%(_day).Hour.%(_hour)[4]")
+	_feelslike_c = EVAL("Forecast.%(_day).Hour.%(_hour)[5]")
+	_humidity = EVAL("Forecast.%(_day).Hour.%(_hour)[6]")
+	_wind_mph = EVAL("Forecast.%(_day).Hour.%(_hour)[7]")
+	_wind_kph = EVAL("Forecast.%(_day).Hour.%(_hour)[8]")
+	_dir = EVAL("Forecast.%(_day).Hour.%(_hour)[9]")
+	_degree = EVAL("Forecast.%(_day).Hour.%(_hour)[10]")
+	_gust_mph = EVAL("Forecast.%(_day).Hour.%(_hour)[11]")
+	_gust_kph = EVAL("Forecast.%(_day).Hour.%(_hour)[12]")
+	_precip_in = EVAL("Forecast.%(_day).Hour.%(_hour)[13]")
+	_precip_mm = EVAL("Forecast.%(_day).Hour.%(_hour)[14]")
+	_cloud = EVAL("Forecast.%(_day).Hour.%(_hour)[15]")
+	_will_it_rain = EVAL("Forecast.%(_day).Hour.%(_hour)[16]")
+	_will_it_snow = EVAL("Forecast.%(_day).Hour.%(_hour)[17]")
+	_chance_of_rain = EVAL("Forecast.%(_day).Hour.%(_hour)[18]")
+	_chance_of_snow = EVAL("Forecast.%(_day).Hour.%(_hour)[19]")
+	_vis_miles = EVAL("Forecast.%(_day).Hour.%(_hour)[20]")
+	_vis_km = EVAL("Forecast.%(_day).Hour.%(_hour)[21]")
+	_windchill_f = EVAL("Forecast.%(_day).Hour.%(_hour)[22]")
+	_windchill_c = EVAL("Forecast.%(_day).Hour.%(_hour)[23]")
+	_heatindex_f = EVAL("Forecast.%(_day).Hour.%(_hour)[24]")
+	_heatindex_c = EVAL("Forecast.%(_day).Hour.%(_hour)[25]")
+	_dewpoint_f = EVAL("Forecast.%(_day).Hour.%(_hour)[26]")
+	_dewpoint_c = EVAL("Forecast.%(_day).Hour.%(_hour)[27]")
+	_pressure_in = EVAL("Forecast.%(_day).Hour.%(_hour)[28]")
+	_pressure_mb = EVAL("Forecast.%(_day).Hour.%(_hour)[29]")
+	_uv = EVAL("Forecast.%(_day).Hour.%(_hour)[30]")
+	
+	//Making a nice time and date display
+	_YMD = _time[0," "]
+	_24h = TOINT(_time[1," "][0,":"])
+	
+	_DMY = _YMD[2,"-"] + "-" + _YMD[1,"-"] + "-" + _YMD[0,"-"]
+	_MDY = TOINT(_YMD[1,"-"]) + "-" + _YMD[2,"-"] + "-" + _YMD[0,"-"] //Hoping the TOINT here removes any leading 0s lol
+	
+	_12h = ""
+	_ap = "a"
+	if _24h >= 12; {_12h = _24h - 12; _ap = "P"}
+	else; {_12h = _24h; _ap = "A"}
+	if _12h == 0; _12h = 12
+	_12h = TOSTR(_12h) + _ap + "M"
+	
+	_date_imperial = "%(_MDY) %(_12h)"
+	_date_metric = "%(_DMY) %(_24h):00"
+	
+	"\0\b2\_q\*\![set,autoscroll,disable]"
+	("\q[<<,OnPreviousForecastHour,%(_day),%(_hour)]","\f[color,disable]<<\f[color,default]")[_hour <= 0 && _day <= 0]
+	
+	"%(newline)\f[align,center]"
+	
+	(_date_imperial,_date_metric)[_metric]
+	
+	"%(newline)\f[align,right]"
+	
+	("\q[>>,OnNextForecastHour,%(_day),%(_hour)]","\f[color,disable]>>\f[color,default]")[_hour >= 23 && _day >= MAXDAY]
+	
+	"\n \n\f[align,default]\f[anchorstyle,none]"
+	
+	
+	("Nighttime","Daytime")[TOINT(_is_day)]
+	"\n"
+	"Temperature: \_a[-]"; (_temp_f + "°F",_temp_c + "°C")[_metric]; "\_a\n"
+	"Feels like: \_a[-]"; (_feelslike_f + "°F",_feelslike_c + "°C")[_metric]; "\_a\n"
+	"Humidity: \_a[-]%(_humidity)%\_a\n"
+	"Wind speed: \_a[-]"; (_wind_mph + "mph",_wind_kph + " kph")[_metric]; "\_a, \_a[-]%(_dir)\_a (\_a[-]%(_degree)°\_a)\n"
+	"Gusts: \_a[-]"; (_gust_mph + "mph",_gust_kph + " kph")[_metric]; "\_a\n"
+	"Precipitation: \_a[-]"; (_precip_in + " inches",_precip_mm + " mm")[_metric]; "\_a\n"
+	"Cloud cover: \_a[-]%(_cloud)%\_a\n"
+	"Chance of rain: \_a[-]%(_chance_of_rain)%\_a\n"
+	"Chance of snow: \_a[-]%(_chance_of_snow)%\_a\n"
+	"Visibility: \_a[-]"; (_vis_miles + " miles",_vis_km + " km")[_metric]; "\_a\n"
+	"Wind chill: \_a[-]"; (_windchill_f + "°F",_windchill_c + "°C")[_metric]; "\_a\n"
+	"Heat index: \_a[-]"; (_heatindex_f + "°F",_heatindex_c + "°C")[_metric]; "\_a\n"
+	"Dew point: \_a[-]"; (_dewpoint_f + "°F",_dewpoint_c + "°C")[_metric]; "\_a\n"
+	"Pressure: \_a[-]"; (_pressure_in + " inches",_pressure_mb + " mb")[_metric]; "\_a\n"
+	"UV Index: \_a[-]%(_uv)\_a\n"
+	
+	"\n\n\![*]\q[Daily forecast,OnForecastMenu.Daily,%(reference[0])]"
+	"\n\![*]\q[Back,OnMenuExec]\e"
+}
+
+OnPreviousForecastHour
+{
+	reference[1]--
+	if reference[1] < 0
+	{
+		if reference[0] <= 0; reference[1] = 0
+		else; {reference[0]--; reference[1] = 23}
+	}
+	"\![raiseplugin,Weather Station,OnForecastMenu.Hourly,%(reference[0]),%(reference[1])]"
+}
+
+OnNextForecastHour
+{
+	reference[1]++
+	if reference[1] > 23
+	{
+		if reference[0] >= MAXDAY; reference[1] = 23
+		else; {reference[0]++; reference[1] = 0}
+	}
+	"\![raiseplugin,Weather Station,OnForecastMenu.Hourly,%(reference[0]),%(reference[1])]"
+}
+
+//Display astronomy data. Astronomy data isn't sent with both 24hr and 12hr time, so have to do some conversions
+AstronomyDisplay : all
+{
+	_metric = Settings.units == "Metric"
+	_day = _argv[0]
+	
+	_sunrise_12 = EVAL("Forecast.%(_day).Astro.sunrise")
+	_sunrise_24 = Twelve_to_24(_sunrise_12)
+	if TOINT(_sunrise_12[0,":"]) < 10; _sunrise_12 = TOINT(_sunrise_12[0,":"]) + ":" + _sunrise_12[1,":"] //If there is a leading 0, get rid of it
+	if _sunrise_12 == "No sunrise"; _sunrise_24 = _sunrise_12 //If there is no sunrise, make sure it says that for the metric version too | MIGHT BE ABLE TO GET RID OF THIS NOW, IDK AND I CAN'T TEST UNTIL THIS COMES AROUND AGAIN
+	"Sunrise: \_a[-]"; (_sunrise_12,_sunrise_24)[_metric]; "\_a\n"
+	
+	_sunset_12 = EVAL("Forecast.%(_day).Astro.sunset")
+	_sunset_24 = Twelve_to_24(_sunset_12)
+	if TOINT(_sunset_12[0,":"]) < 10; _sunset_12 = TOINT(_sunset_12[0,":"]) + ":" + _sunset_12[1,":"]
+	if _sunset_12 == "No sunset"; _sunset_24 = _sunset_12
+	"Sunset: \_a[-]"; (_sunset_12,_sunset_24)[_metric]; "\_a\n\n"
+	
+	_moonrise_12 = EVAL("Forecast.%(_day).Astro.moonrise")
+	_moonrise_24 = Twelve_to_24(_moonrise_12)
+	if TOINT(_moonrise_12[0,":"]) < 10; _moonrise_12 = TOINT(_moonrise_12[0,":"]) + ":" + _moonrise_12[1,":"]
+	if _moonrise_12 == "No moonrise"; _moonrise_24 = _moonrise_12
+	"Moonrise: \_a[-]"; (_moonrise_12,_moonrise_24)[_metric]; "\_a\n"
+	
+	_moonset_12 = EVAL("Forecast.%(_day).Astro.moonset")
+	_moonset_24 = Twelve_to_24(_moonset_12)
+	if TOINT(_moonset_12[0,":"]) < 10; _moonset_12 = TOINT(_moonset_12[0,":"]) + ":" + _moonset_12[1,":"]
+	if _moonset_12 == "No moonset"; _moonset_24 = _moonset_12
+	"Moonset: \_a[-]"; (_moonset_12,_moonset_24)[_metric]; "\_a\n\n"
+	
+	"Moon phase: \_a[-]"; EVAL("Forecast.%(_day).Astro.moon_phase"); "\_a \n"
+	"Illumination: \_a[-]"; EVAL("Forecast.%(_day).Astro.moon_illumination"); "%\_a    \_b[img/moon_0%(PhaseNum(_day)),inline,--option=use_self_alpha]\n"
+}
+
+//Convert 12hr to 24hr
+Twelve_to_24
+{
+	if "No" _in_ _argv[0]; {_argv[0]; return}
+	
+	_orig = _argv[0]
+	_hours = TOINT(_orig[0,":"])
+	_minutes = TOINT(_orig[1,":"][0," "])
+	_ap = TOUPPER(_orig[1," "])
+	
+	if _ap == "PM"
+	{
+		if _hours != 12; _hours += 12
+	}
+	if _hours < 10; _hours = "0" + TOSTR(_hours)
+	if _minutes < 10; _minutes = "0" + TOSTR(_minutes)
+	
+	"%(_hours):%(_minutes)"
+}
+
+//Convert 24hr to 12hr
+TwentyFour_to_12
+{
+	_orig = _argv[0]
+	_hours = TOINT(_orig[0,":"])
+	_minutes = TOINT(_orig[1,":"])
+	_ap = "AM"
+	
+	if _hours >= 12
+	{
+		_hours -= 12
+		_ap = "PM"
+	}
+	if _hours == 0; _hours = 12
+	if _minutes < 10; _minutes = "0" + TOSTR(_minutes)
+	
+	"%(_hours):%(_minutes) %(_ap)"
+}
+
+//Astronomy menu display
+OnAstronomyMenu : all
+{
+	res_marker = version
+	
+	"\0\b2\*\![set,autoscroll,disable]\_q\f[anchorstyle,none]"
+	"\f[align,center]—Astronomy—\n \f[align,default]\n"
+	AstronomyDisplay(0)
+	"\n\n\![*]\q[Back,OnMenuExec]"
+}
+
+//Weather alert display. Yes, I am aware that the descriptions have missing spaces for some reason. I can't figure out why that is. The API shows the spaces just fine online, but the result from the SAORI has the missing spaces before I even touch it.
+//I will also note that when I use the SAORI to request info from the API, categories without info have both a close and ending tag, like <severity></severity>, whereas in the online version it shows <severity/>. Weird.
+OnWeatherAlertMenu : all
+{
+	_alert = reference[0]
+	_info = SPLIT(Weather.alerts[_alert],C_BYTE1)
+	res_marker = version
+	
+	"\0\b2\*\![set,autoscroll,disable]\_q\f[anchorstyle,none]"
+	
+	("\q[<<,OnPreviousAlert,%(_alert)]","\f[color,disable]<<\f[color,default]")[_alert <= 0]
+	
+	"%(newline)\f[align,center]"
+	
+	"(%(_alert + 1)/%(ARRAYSIZE(Weather.alerts)))"
+	
+	"%(newline)\f[align,right]"
+	
+	("\q[>>,OnNextAlert,%(_alert)]","\f[color,disable]>>\f[color,default]")[_alert >= (ARRAYSIZE(Weather.alerts) - 1)]
+	
+	"\n \n\f[align,default]"
+	
+	//Love the all modifier, imagine just being able to put a loop and not needing a display variable. Anywho this displays all the info from the alerts that is not blank, with an extra bit to make the date and time displays a bit easier to read
+	_i = 0
+	foreach AlertTags; _tag
+	{
+		_inf = _info[_i]
+		if _tag == "effective" || _tag == "expires"
+		{
+			_inf = REPLACE(_inf,"T"," ")
+		}
+		
+		if _inf != ""; "%(Capitalize(_tag)): \_a[-]%(_inf)\_a\n"
+		_i++
+	}
+	
+	"\n\n\![*]\q[Back,OnMenuExec]"
+}
+
+OnPreviousAlert
+{
+	reference[0]--
+	if reference[0] < 0; reference[0] = 0
+
+	"\![raiseplugin,Weather Station,OnWeatherAlertMenu,%(reference[0])]"
+}
+
+OnNextAlert
+{
+	reference[0]++
+	if reference[0] >= (ARRAYSIZE(Weather.alerts) - 1); reference[0] = (ARRAYSIZE(Weather.alerts) - 1)
+
+	"\![raiseplugin,Weather Station,OnWeatherAlertMenu,%(reference[0])]"
+}
+
+OnGetCurrentWeather //Can apparently also run this without arguments to test if an internet connection is available. Very useful! ...If I'm moving my website, I need to keep this in mind... | I think this note was for the httpc saori...
+{
+	_location = "(Not set)"
+	if UserInfo.location != ""; _location = UserInfo.location
+	if _location == "(Not set)"; return
+	
+	//Request info from the API
+	Info.error_code = ""
+	Info.error_message = ""
+	//_api = FUNCTIONEX("saori/httpc.dll","https://api.weatherapi.com/v1/current.xml?key=__API_KEY__&q=%(UserInfo.location_url)&aqi=yes")
+	_api = FUNCTIONEX("saori/httpc.dll","http://api.weatherapi.com/v1/forecast.xml?key=__API_KEY__&q=%(UserInfo.location_url)&aqi=yes&days=3&alerts=yes")
+	
+	//Update the last updated time
+	Info.last_update[0] = hour
+	Info.last_update[1] = nowhour
+	Info.last_update[2] = nowmin
+	Info.last_update[3] = nowsec
+	if ampm == 1; Info.last_update[4] = "pm"
+	else; Info.last_update[4] = "am"
+	Info.last_update[5] = GETSECCOUNT
+	
+	if "<error>" _in_ _api //If there's an error, let the user know and clear the weather info
+	{
+		Info.error_code = TOSTR(ExtractXML(_api,"code"))
+		Info.error_message = ExtractXML(_api,"message")
+		ClearWeatherData
+		LOGGING(Info.error_code)
+		LOGGING(Info.error_message)
+		CheckForUpdates //If there's an error, check for an update because an update might fix it...
+	}
+	elseif _api == ""
+	{
+		Info.error_code = "99999"
+		Info.error_message = "No API response"
+		ClearWeatherData
+		LOGGING(Info.error_code)
+		LOGGING(Info.error_message)
+		CheckForUpdates //If there's an error, check for an update because an update might fix it...
+	}
+	else
+	{
+		//Extracting info from the XML file the API sent. ExtractXML here pulls out the data from between the XML tags so that we can get what we need. Starts by breaking it into big chunks, then looping through lists of tags and pulling out the info between each one.
+		//The EVAL tags here are mostly to help with the forecast days, where there are 72 arrays to deal with. Basically it can make variables on the fly, using the numbers for the day and hour to give them the proper names
+		
+		//================CURRENT WEATHER================
+		_current = ExtractXML(_api,"current")
+		
+		foreach CurrentWeatherTags; _tag
+		{
+
+			EVAL("Weather.%(REPLACE(_tag,'-','_')) = '%(TOSTR(ExtractXML(_current,_tag)))'")
+		}
+		
+		//Doing condition separately since it has subcategories
+		_condition = ExtractXML(_current,"condition")
+
+		Weather.condition = ExtractXML(_condition,"text")
+		Weather.condition_icon = ExtractXML(_condition,"icon")
+		Weather.condition_code = ExtractXML(_condition,"code")
+		
+		//================FORECAST================
+
+		_forecastdays = ExtractXML(_api,"forecastday")
+		
+		//Loop for each of the 3 days of forecast data
+		for _i = 0; _i < 3; _i++
+		{
+			//These two are on their own above the rest of the forecast data
+			EVAL("Forecast.%(_i).Day.date = '%(ExtractXML(_forecastdays[_i],'date'))'")
+			EVAL("Forecast.%(_i).Day.date_epoch = '%(ExtractXML(_forecastdays[_i],'date_epoch'))'")
+			
+			//-----------Day-----------
+			_day = ExtractXML(_forecastdays[_i],"day")
+			
+			foreach ForecastDayTags; _tag
+			{
+				EVAL("Forecast.%(_i).Day.%(REPLACE(_tag,'-','_')) = '%(TOSTR(ExtractXML(_day,_tag)))'")
+			}
+			
+			//-----------Astro-----------
+			
+			_astro = ExtractXML(_forecastdays[_i],"astro")
+			
+			foreach ForecastAstroTags; _tag
+			{
+				EVAL("Forecast.%(_i).Astro.%(REPLACE(_tag,'-','_')) = '%(TOSTR(ExtractXML(_astro,_tag)))'")
+			}
+			
+			//-----------Hour-----------
+			
+			_hours = ExtractXML(_forecastdays[_i],"hour")
+			
+			//Loop for each of the 24 hours in each day
+			_ii = 0
+			foreach _hours; _hour
+			{
+				EVAL("Forecast.%(_i).Hour.%(_ii) = IARRAY")
+				_temp = IARRAY
+				foreach ForecastHourTags; _tag
+				{
+					EVAL("_temp ,= '%(TOSTR(ExtractXML(_hour,_tag)))'")
+				}
+				EVAL("Forecast.%(_i).Hour.%(_ii) = '%(_temp)'")
+				_ii++
+			}
+		}
+		
+		//================ALERTS================
+		
+		Weather.alerts = IARRAY
+		if "<alert>" _in_ _api
+		{
+			LOGGING("FOUND ALERT")
+			_alerts = ExtractXML(_api,"alert")
+			LOGGING(_alerts)
+			
+			foreach _alerts; _alert
+			{
+				LOGGING("ALERT %(_alert)")
+				_temp = ""
+				foreach AlertTags; _tag
+				{
+					LOGGING("TAG %(_TAG)")
+					_getinfo = ExtractXML(_alert,_tag)
+					if _temp != ""; _temp += C_BYTE1
+					EVAL("_temp += '%(_getinfo)'")
+				}
+				Weather.alerts ,= _temp
+				
+			}
+		}
+	}
+	Info.Send_Weather_Now = 1 //Makes OnSecondChange send the weather data since it's a bit wonky if you just go straight to it
+}
+
+//For ghosts to request the current weather if they don't have it for some reason
+OnWeatherStation.Weather
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	//res_event_option = "notify"
+
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Weather" //Calls this event in the ghost if it exists
+	//res_marker = version //Send the little text on the bottom of the balloon that says it's from this plugin
+	
+	
+	
+	res_reference[0] = Weather.condition
+	res_reference[1] = Weather.condition_icon
+	res_reference[2] = Weather.condition_code
+	res_reference[3] = Weather.is_day
+	res_reference[4] = Weather.temp_f
+	res_reference[5] = Weather.temp_c
+	res_reference[6] = Weather.feelslike_f
+	res_reference[7] = Weather.feelslike_c
+	res_reference[8] = Weather.humidity
+	res_reference[9] = Weather.wind_mph
+	res_reference[10] = Weather.wind_kph
+	res_reference[11] = Weather.wind_dir
+	res_reference[12] = Weather.wind_degree
+	res_reference[13] = Weather.gust_mph
+	res_reference[14] = Weather.gust_kph
+	res_reference[15] = Weather.precip_in
+	res_reference[16] = Weather.precip_mm
+	res_reference[17] = Weather.cloud
+	//Yes, these are the same as you can get from the forecast, but I figure this will be easier for people
+	res_reference[18] = Forecast.0.Day.daily_will_it_rain
+	res_reference[19] = Forecast.0.Day.daily_chance_of_rain
+	res_reference[20] = Forecast.0.Day.daily_will_it_snow
+	res_reference[21] = Forecast.0.Day.daily_chance_of_snow
+	
+	res_reference[22] = Weather.vis_miles
+	res_reference[23] = Weather.vis_km
+	res_reference[24] = Weather.pressure_in
+	res_reference[25] = Weather.pressure_mb
+	res_reference[26] = Weather.uv
+	
+	
+	
+	//Air quality
+	res_reference[27] = Weather.co
+	res_reference[28] = Weather.no2
+	res_reference[29] = Weather.o3
+	res_reference[30] = Weather.so2
+	res_reference[31] = Weather.pm2_5
+	res_reference[32] = Weather.pm10
+	res_reference[33] = Weather.us_epa_index //_ not - here
+	res_reference[34] = Weather.gb_defra_index
+	
+	
+	
+	
+	res_reference[35] = Settings.units
+	res_reference[36] = Info.last_update[5]
+	res_reference[37] = version_num
+	//res_reference[36] = Settings.weather_interval //Currently not in use
+
+	if Settings.share_location == "On"
+	{
+		res_reference[38] = UserInfo.location
+		res_reference[39] = UserInfo.location_url
+		res_reference[40] = UserInfo.latitude
+		res_reference[41] = UserInfo.longitude
+	}
+}
+
+//For ghosts requesting the current astronomy data
+//reference0 is the current day
+OnWeatherStation.Astro
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	LOGGING("====================================================================")
+	LOGGING("SEND ASTRO %(reference[0])")
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Astro"
+	
+	if !(reference[0] == "0" || reference[0] == "1" || reference[0] == "2"); reference[0] = "0" //If no valid day is specified, use today
+	
+	res_reference[0] = reference[0]
+	
+	_sunrise = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.sunrise)%(CHR(34))")
+	_sunset = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.sunset)%(CHR(34))")
+	_moonrise = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moonrise)%(CHR(34))")
+	_moonset = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moonset)%(CHR(34))")
+	
+	res_reference[1] = _sunrise
+	res_reference[2] = _sunset
+	res_reference[3] = _moonrise
+	res_reference[4] = _moonset
+	
+	res_reference[5] = Twelve_to_24(_sunrise)
+	res_reference[6] = Twelve_to_24(_sunset)
+	res_reference[7] = Twelve_to_24(_moonrise)
+	res_reference[8] = Twelve_to_24(_moonset)
+	
+	EVAL("res_reference[9] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moon_phase)%(CHR(34))")
+	res_reference[10] = PhaseNum
+	EVAL("res_reference[11] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moon_illumination)%(CHR(34))")
+	
+	// _ref = 1
+	// for _i = 0; _i < ARRAYSIZE(ForecastAstroTags); _i++
+	// {
+		// _tag = ForecastAstroTags[_i]
+		// EVAL("res_reference[%(_ref)] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.%(_tag))%(CHR(34))")
+		// _ref++
+	// }
+	// LOGGING(res_reference)
+}
+
+//For ghosts requesting the current daily forecast data
+//reference0 is the current day
+OnWeatherStation.Forecast.Day
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	if !(reference[0] == "0" || reference[0] == "1" || reference[0] == "2"); reference[0] = "0" //If no valid day is specified, use today
+	
+	LOGGING("====================================================================")
+	LOGGING("SEND FORECAST DAY %(reference[0])")
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Forecast.Day"
+	
+	res_reference[0] = reference[0]
+	
+	_ref = 1
+	for _i = 0; _i < ARRAYSIZE(ForecastDayTags); _i++
+	{
+		_tag = ForecastDayTags[_i]
+		EVAL("res_reference[%(_ref)] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Day.%(_tag))%(CHR(34))")
+		_ref++
+	}
+	LOGGING(GETVARLIST("res_"))
+	LOGGING(res_reference)
+}
+
+//For ghosts requesting the current hourly forecast data
+//reference0 is the current day
+OnWeatherStation.Forecast.Hourly
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	if !(reference[0] == "0" || reference[0] == "1" || reference[0] == "2"); reference[0] = "0" //If no valid day is specified, use today
+	
+	LOGGING("====================================================================")
+	LOGGING("SEND FORECAST HOURS %(reference[0])")
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Forecast.Hourly"
+	
+	_ref = 0
+	for _i = 0; _i < 24; _i++
+	{
+		EVAL("res_reference[%(_ref)] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Hour.%(_i))%(CHR(34))")
+		_ref++
+	}
+	
+	res_reference[24] = reference[0]
+}
+
+//For ghosts requesting the current weather alerts
+//This is its own function purely because it needed to be a 2d array, and there are commas in the descriptions... Sorry AYA users, please upgrade to YAYA
+OnWeatherStation.Alerts
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	
+	LOGGING("====================================================================")
+	LOGGING("SEND FORECAST HOURS %(reference[0])")
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Alerts"
+	
+	
+	for _i = 0; _i < ARRAYSIZE(Weather.alerts); _i++
+	{
+		EVAL("res_reference[%(_i)] = Weather.alerts[%(_i)]")
+	}
+}
+
+OnWeatherStation.Error
+{
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Error"
+	
+	_short = ""
+	_msg = Info.error_message
+	_code = Info.error_code
+	
+	
+	if Info.error_code == "1003"; _short = "no_location"
+	elseif Info.error_code == "1006"; _short = "location_invalid"
+	elseif Info.error_code == "2007"; _short = "api_quota_exceeded"
+	elseif Info.error_code == "2008"; _short = "api_key_disabled"
+	elseif Info.error_code == "9999"; _short = "api_internal_error"
+	elseif Info.error_code == "99999"; _short = "no_api_response"
+	else; _short = "other"
+	
+	if _argv[0] == "no_location"
+	{
+		_short = _argv[0]
+		_msg = "No matching location found."
+		_code = "1006"
+	}
+	
+	res_reference[0] = _short
+	res_reference[1] = _msg
+	res_reference[2] = _code
+	
+	res_reference[3] = Info.last_update[5]
+	res_reference[4] = version_num
+}
+
+//Changing locations
+OnChangeLocation
+{
+	res_marker = version
+	"\![quicksection,true]\*\![open,inputbox,OnWeatherLocation,-1]"
+	--
+	"Write the name or latitude and longitude of your city to search for it. If in the US, you can use a zip code. If in the UK, you can use a postcode. If in Canada, you can use a postal code.\n\n\![*]\q[Back,OnSettingsMenu]\e"
+}
+
+//Parse the location stuff sent back by the API, call OnChangeLocation again if there were no results
+OnWeatherLocation
+{
+	res_marker = version
+	_api = FUNCTIONEX("saori/httpc.dll","https://api.weatherapi.com/v1/search.xml?key=__API_KEY__&q=%(reference[0])")
+	_display = ""
+
+	_results = ExtractXML(_api,"geo")
+
+	if ARRAYSIZE(_results) <= 1
+	{
+		"\![quicksection,true]No results, please try again.\n\n"
+		--
+		OnChangeLocation
+	}
+	else
+	{
+		//Loop through all the results and make a nice list
+		foreach _results; _location
+		{
+			LOGGING("LOCATION")
+			LOGGING(_location)
+			_name = ExtractXML(_location,"name") + ", " + ExtractXML(_location,"region") + ", " + ExtractXML(_location,"country")
+			_url = ExtractXML(_location,"url")
+			_lat = ExtractXML(_location,"lat")
+			_lon = ExtractXML(_location,"lon")
+
+			if _name == "" || _url == ""; continue
+
+			_nocomma = REPLACE(_name,",","|-|") //changed these to C_BYTE1, hope they didn't break | update yes they did break I think because something something auto type convert lol
+
+			_display += "\![*]\__q[OnWeatherLocationChosen,%(_url),%(_nocomma), %(_lat), %(_lon)]%(_name)\__q\n\n[half]" //There are spaces here to ensure these are transferred as strings and not ints
+		}
+		
+		"\*\_q\b2\![set,autoscroll,disable]"
+		--
+		"\![*]\q[Back,OnSettingsMenu]\n\n"
+		--
+		"%(_display)"
+		--
+		"\n\n\![*]\q[Back,OnSettingsMenu]\e"
+	}
+}
+
+//Set the location data once chosen and go back to the menu
+OnWeatherLocationChosen
+{
+	UserInfo.location_url = reference[0]
+	UserInfo.location = REPLACE(reference[1],"|-|",",")
+	UserInfo.latitude = CUTSPACE(reference[2])
+	UserInfo.longitude = CUTSPACE(reference[3])
+	OnGetCurrentWeather //notifying everyone right now... not good | No this is good, everyone needs the updated info
+	OnMenuExec
+}
+
+OnCancel
+{
+	"\0\b[-1]\e"
+}
+
+OnGhostBoot
+{
+	OnGetCurrentWeather
+}
+
+OnSecondChange
+{
+	if Info.Send_Weather_Now
+	{
+		Info.Send_Weather_Now = 0
+		OnWeatherStation.Weather
+		//No point sending anything but this one since it would only send one day of forecast anyhow...
+	}
+	elseif second == 0 && minute % Settings.weather_interval == 0
+	{
+		OnGetCurrentWeather
+	}
+}

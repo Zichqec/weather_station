@@ -1,0 +1,2 @@
+profile/,nonar,noupdate
+yaya_variable.cfg.ays,nonar,noupdate

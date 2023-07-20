@@ -1,0 +1,4 @@
+charset,UTF-8
+type,plugin
+name,Weather Station
+directory,weather_station_zi

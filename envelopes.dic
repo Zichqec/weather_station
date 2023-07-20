@@ -1,0 +1,159 @@
+nowhour //Fixing the damn 12 hour display
+{
+	if hour12 == 0; 12
+	else; hour12
+}
+
+nowmin //Adding a 0 to the minute if it's under 10
+{
+	if minute < 10; "0%(minute)"
+	else; "%(minute)"
+}
+
+nowsec //Adding a 0 to the second if it's under 10
+{
+	if second < 10; "0%(second)"
+	else; "%(second)"
+}
+
+//Full week day - not in use atm but I'll leave it for now
+nowday
+{
+	_weekday = weekday
+	if _argv[0] == "next"
+	{
+		_weekday++
+		if _weekday > 6; _weekday = 0
+	}
+	if _argv[0] == "last"
+	{
+		_weekday--
+		if _weekday < 0; _weekday = 6
+	}
+	
+	if GETTYPE(_argv[0]) == 1 //If it's an integer
+	{
+		while _argv[0] > 6; {_argv[0] -= 7}
+		while _argv[0] < 0; {_argv[0] += 7}
+		_weekday = _argv[0]
+	}
+	
+	if _weekday == 0; "Sunday"
+	elseif _weekday == 1; "Monday"
+	elseif _weekday == 2; "Tuesday"
+	elseif _weekday == 3; "Wednesday"
+	elseif _weekday == 4; "Thursday"
+	elseif _weekday == 5; "Friday"
+	else; "Saturday"
+}
+
+//This helps with alignment tags, so you can put left, center, and right aligned text all on the same line
+newline
+{
+	"\n \_l[0]\n[-100]"
+}
+
+CanGetWeather
+{
+	if UserInfo.location != ""; 1
+	else; 0
+}
+
+HasWeatherData
+{
+	//if Info.http_code == "200"
+	if Weather.condition != "" && Info.error_code == ""; 1
+	else; 0
+}
+
+version
+{
+	"Weather Station v%(version_num)"
+}
+
+//Don't forget to update this, me!
+version_num
+{
+	"1.0.0"
+}
+
+//These are all the categories that the API sends over. I think I may have slightly rearranged the order to something that made more sense to me. They are separated into different groups, based on the groups the API sends over.
+//Current weather info
+CurrentWeatherTags
+{
+	"is_day,temp_f,temp_c,wind_mph,wind_kph,wind_dir,wind_degree,pressure_in,pressure_mb,precip_in,precip_mm,humidity,cloud,feelslike_f,feelslike_c,vis_miles,vis_km,uv,gust_mph,gust_kph,co,no2,o3,so2,pm2_5,pm10,us-epa-index,gb-defra-index"
+}
+
+//Forecast info for entire days (next 3 days with the free API)
+ForecastDayTags
+{
+	"maxtemp_f,maxtemp_c,mintemp_f,mintemp_c,avgtemp_f,avgtemp_c,maxwind_mph,avghumidity,maxwind_kph,totalprecip_in,totalprecip_mm,daily_will_it_rain,daily_chance_of_rain,daily_will_it_snow,daily_chance_of_snow,avgvis_miles,avgvis_km"
+}
+
+//Astronomy forecast tags
+ForecastAstroTags
+{
+	"sunrise,sunset,moonrise,moonset,moon_phase,moon_illumination"
+}
+
+//Tags for each of the 24 hours in each of the forecast days
+ForecastHourTags
+{
+	"time,is_day,temp_f,temp_c,feelslike_f,feelslike_c,humidity,wind_mph,wind_kph,wind_dir,wind_degree,gust_mph,gust_kph,precip_in,precip_mm,cloud,will_it_rain,chance_of_rain,will_it_snow,chance_of_snow,vis_miles,vis_km,windchill_f,windchill_c,heatindex_f,heatindex_c,dewpoint_f,dewpoint_c,pressure_in,pressure_mb,uv"
+}
+
+//Tags for weather alerts
+AlertTags
+{
+	"headline,msgtype,severity,urgency,areas,category,certainty,event,note,effective,expires,desc,instruction"
+}
+
+PhaseNum
+{
+	_day = 0; if _argv[0] != ""; _day = _argv[0]
+	_phase = EVAL("Forecast.%(_day).Astro.moon_phase")
+	
+	if _phase == "New Moon"; 0
+	elseif _phase == "Waxing Crescent"; 1
+	elseif _phase == "First Quarter"; 2
+	elseif _phase == "Waxing Gibbous"; 3
+	elseif _phase == "Full Moon"; 4
+	elseif _phase == "Waning Gibbous"; 5
+	elseif _phase == "Last Quarter"; 6
+	elseif _phase == "Waning Crescent"; 7
+	else; -1
+}
+
+MoonIcon
+{
+	_phase = PhaseNum
+	if _phase == -1; _phase = 8
+	
+	"\_b[img/moon_0%(_phase),inline,--option=use_self_alpha]"
+}
+
+
+//Pulls out data from between XML tags
+ExtractXML
+{
+	_output = IARRAY
+	_split = SPLIT(_argv[0],"<%(_argv[1])>") //Split by the starting tag
+	_split[0] = IARRAY //Remove the first element because we don't need it
+	foreach _split; _element //For each starting tag found, split off everything after the ending tag
+	{
+		_output ,= SPLIT(_element,"</%(_argv[1])>")[0] //Add contents to an array
+	}
+	//LOGGING("OUTPUT: ",_output)
+	//LOGGING("TYPE: ",GETTYPE(_output))
+	_output
+}
+
+//Capitalizes the first letter of words/envelopes you send to it
+Capitalize
+{
+	_word = _argv[0] //Sets _word to the word the user sent
+	_buffer = SUBSTR(_word,0,1) //Storing the first character in _buffer
+	_word = ERASE(_word,0,1) //Erasing the first character from _word
+	_word = INSERT(_word,0,TOUPPER(_buffer)) //Making the character in _buffer uppercase and inserting it back into _word
+	_word //Returns the capitalized word
+}
