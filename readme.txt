@@ -5,9 +5,10 @@ Ghosts cannot see your location data unless you explicitly turn this setting on 
 Please note: I have had trouble running this plugin on my Windows 7 computer, but someone else tried it on Windows 7 and it worked fine. If it will not show any results when you search your location, please get in contact! I would love to try and figure out why this happens and if I can fix it.
 
 
-Weather Station v1.0.2
+Weather Station v1.0.3
 Made by Zichqec https://zichqec.github.io/s-the-skeleton/
 Using Weather API https://www.weatherapi.com/
+Repository here https://github.com/Zichqec/weather_station
 
 —————————— Developer Info ——————————
 
@@ -76,6 +77,15 @@ Please note: I only get 1 million free API calls a month. If you're a developer 
 
 
 —————————— Version History ——————————
+
+— v1.0.3 —
+
+• Fixed an issue where if a location search only returned a single result, it would say there were none.
+• Fixed an issue where the references in the daily forecast for average humidity and maximum wind speed in mph were swapped.
+• Fixed an issue where metric time would not show the "No sunrise" etc. displays (I think, I did this so long ago I'm not positive).
+• Made emdashes always appear in the font Calibri, to avoid tofus on balloons with special fonts.
+• Added a \![no-autopause] tag to menus for ghosts using my autopause system, so that they should display menus instantly.
+• Gave Weather Station its own github repo where changes can be tracked, and changed the homeurl accordingly.
 
 — v1.0.2 —
 

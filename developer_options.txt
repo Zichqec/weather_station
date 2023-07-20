@@ -1,2 +1,4 @@
 profile/,nonar,noupdate
+.git/,nonar,noupdate
+.gitignore,nonar,noupdate
 yaya_variable.cfg.ays,nonar,noupdate

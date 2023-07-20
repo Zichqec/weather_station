@@ -5,5 +5,5 @@ id,FD4ECF7C-50C5-47AE-2DBF-B2B7BF08D8BA
 filename,yaya.dll
 craftman,Zichqec
 craftmanurl,https://zichqec.github.io/s-the-skeleton/
-homeurl,https://zichqec.github.io/s-the-skeleton/updates/plugins/weather_station_zi/
+homeurl,https://raw.githubusercontent.com/Zichqec/weather_station/main/
 secondchangeinterval,1

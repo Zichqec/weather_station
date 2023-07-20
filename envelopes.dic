@@ -1,3 +1,8 @@
+emdash
+{
+	"\f[name,calibri]—\f[name,default]"
+}
+
 nowhour //Fixing the damn 12 hour display
 {
 	if hour12 == 0; 12
@@ -74,7 +79,7 @@ version
 //Don't forget to update this, me!
 version_num
 {
-	"1.0.2"
+	"1.0.3"
 }
 
 h
@@ -102,7 +107,7 @@ CurrentWeatherTags
 //Forecast info for entire days (next 3 days with the free API)
 ForecastDayTags
 {
-	"maxtemp_f,maxtemp_c,mintemp_f,mintemp_c,avgtemp_f,avgtemp_c,maxwind_mph,avghumidity,maxwind_kph,totalprecip_in,totalprecip_mm,daily_will_it_rain,daily_chance_of_rain,daily_will_it_snow,daily_chance_of_snow,avgvis_miles,avgvis_km"
+	"maxtemp_f,maxtemp_c,mintemp_f,mintemp_c,avgtemp_f,avgtemp_c,avghumidity,maxwind_mph,maxwind_kph,totalprecip_in,totalprecip_mm,daily_will_it_rain,daily_chance_of_rain,daily_will_it_snow,daily_chance_of_snow,avgvis_miles,"
 }
 
 //Astronomy forecast tags
