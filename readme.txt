@@ -5,13 +5,13 @@ Ghosts cannot see your location data unless you explicitly turn this setting on 
 Please note: I have had trouble running this plugin on my Windows 7 computer, but someone else tried it on Windows 7 and it worked fine. If it will not show any results when you search your location, please get in contact! I would love to try and figure out why this happens and if I can fix it.
 
 
-Weather Station v1.0.1
+Weather Station v1.0.2
 Made by Zichqec https://zichqec.github.io/s-the-skeleton/
 Using Weather API https://www.weatherapi.com/
 
 —————————— Developer Info ——————————
 
-Information on the references for each event can be found on the external SHIORI page of Ukadoc ( http://ssp.shillest.net/ukadoc/manual/list_shiori_event_ex.html ), or in events_reference.txt. 
+Information on the references for each event can be found on the external SHIORI page of Ukadoc ( http://ssp.shillest.net/ukadoc/manual/list_shiori_event_ex.html ), or in events_reference.txt.
 
 After the user has entered their location, this plugin will send the event OnWeatherStation.Weather every hour on the hour, every time a ghost boots, and any time a ghost calls it with raiseplugin. Note that it is always sent to all open ghosts, no matter how it is called. I do not recommend putting dialogue in here! Just use it to update variables in your ghost.
 
@@ -77,12 +77,20 @@ Please note: I only get 1 million free API calls a month. If you're a developer 
 
 —————————— Version History ——————————
 
+— v1.0.2 —
 
-—v1.0.1—
+• Fixed the documentation having a couple of references in the wrong order.
+• Changed the display to use plain text highlighting instead of anchors. This will not work on older versions of SSP, but fixes an issue where the balloon could time out if they were clicked.
+• Cancelling the location search menu will now close the input box.
+• Added an additional reference to OnWeatherStation.Error that indicates whether an update is available for the plugin.
+• Updated to YAYAtc571-3.
+
+
+— v1.0.1 —
 
 • Fixed a bug where if a weather alert contained an apostrophe, it would break it and make ghosts read out part of the weather alert when loaded in.
 
 
-—v1.0.0—
+— v1.0.0 —
 
 • Initial release

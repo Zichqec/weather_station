@@ -1,4 +1,4 @@
-This information should also be vailable on the external SHIORI events page of Ukadoc! http://ssp.shillest.net/ukadoc/manual/list_shiori_event_ex.html
+This information should also be available on the external SHIORI events page of Ukadoc! http://ssp.shillest.net/ukadoc/manual/list_shiori_event_ex.html
 
 —————————— OnWeatherStation.Weather ——————————
 
@@ -37,9 +37,9 @@ reference31: PM2.5 (Particulate Matter smaller than 2.5 microns in diameter) in 
 reference32: PM10 (Particulate Matter smaller than 10 microns in diameter) in μg/m3 (Micrograms per cubic meter).
 reference33: US EPA index. 1 means Good, 2 means Moderate, 3 means Unhealthy for sensitive group, 4 means Unhealthy, 5 means Very unhealthy, 6 means Hazardous.
 reference34: UK Defra Index. See weatherapi.com's documentation for the table of possible values and what they mean.
-reference35: The time the plugin last updated the weather data, in seconds since EPOCH (1970/1/1 00:00:00).
-reference36: The current version number of the plugin.
-reference37: The user's choice of units (Imperial or Metric).
+reference35: The user's choice of units (Imperial or Metric).
+reference36: The time the plugin last updated the weather data, in seconds since EPOCH (1970/1/1 00:00:00).
+reference37: The current version number of the plugin.
 reference38: The user's location name. Only available if the user has chosen to share their location data.
 reference39: The url for the user's location, to be used with the API. Only available if the user has chosen to share their location data.
 reference40: The user's latitude. Only available if the user has chosen to share their location data.
@@ -163,3 +163,4 @@ reference1: A more verbose error message. THIS DOES NOT MATCH THE MESSAGES ON we
 reference2: The error code, as listed on weatherapi.com's documentation.
 reference3: The time the plugin last attempted to update the weather data, in seconds since EPOCH (1970/1/1 00:00:00).
 reference4: The current version number of the plugin.
+reference5: 1 if there is a plugin update available, 0 otherwise.

@@ -42,7 +42,6 @@ dic, envelopes.dic
 //------------------------------------------------------------------------------
 save.encode,on
 msglang,english
-messagetxt,messagetxt/english.txt
 
 //iolog.filter.mode,whitelist
 //iolog.filter.keyword,pluginpathlist

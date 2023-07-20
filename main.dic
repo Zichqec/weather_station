@@ -163,8 +163,8 @@ OnMenuExec : all
 	if !ISVAR("Settings.weather_interval"); Settings.weather_interval = 60
 
 	
-	"\0\b2\_q\*\![set,autoscroll,disable]\![close,inputbox,OnWeatherLocation]"
-	"\f[align,center]—Weather Station—\n\n[half]\f[align,default]"
+	"\0\b2\_q\*\![set,autoscroll,disable]\f[anchorvisitedfontcolor,default.anchor]\![close,inputbox,OnWeatherLocation]"
+	"\f[align,center]— Weather Station —\n\n[half]\f[align,default]"
 	
 	if Info.update_available; "\![*]\_a[OnWeatherStationUpdate]An update is available!\_a\n\n[half]"
 	
@@ -194,13 +194,13 @@ OnMenuExec : all
 	//Last updated display
 	if HasWeatherData || Info.error_code != ""
 	{
-		"\nLast updated \f[anchorstyle,none]\_a[-]"
+		"\nLast updated \f[anchorstyle,none]%(h)"
 		if _metric; "%(Info.last_update[0])"
 		else; "%(Info.last_update[1])"
 		":%(Info.last_update[2]) "
 		if !_metric; "%(Info.last_update[4])" //am/pm
 	}
-	"\_a\f[anchorstyle,default]\n[half]"
+	"%(d)\f[anchorstyle,default]\n[half]"
 	"\n\![*]\__q[OnSettingsMenu]Settings\__q"
 	"\n\n"
 
@@ -214,36 +214,36 @@ OnMenuExec : all
 		//Current weather display
 		"Current weather:\n\n[half]\f[anchorstyle,none]"
 		
-		"\_a[-]%(Weather.condition)\_a\n" //\_b[http:%(Weather.condition_icon)]
+		"%(h)%(Weather.condition)%(d)\n" //\_b[http:%(Weather.condition_icon)]
 		
-		if _metric; "Temperature: \_a[-]%(Weather.temp_c)°C\_a\nFeels like: \_a[-]%(Weather.feelslike_c)°C\_a\n"
-		else; "Temperature: \_a[-]%(Weather.temp_f)°F\_a\nFeels like: \_a[-]%(Weather.feelslike_f)°F\_a\n"
+		if _metric; "Temperature: %(h)%(Weather.temp_c)°C%(d)\nFeels like: %(h)%(Weather.feelslike_c)°C%(d)\n"
+		else; "Temperature: %(h)%(Weather.temp_f)°F%(d)\nFeels like: %(h)%(Weather.feelslike_f)°F%(d)\n"
 		
-		//"Temperature: \_a[-]" + ("%(Weather.temp_f)°F\_a\nFeels like: \_a[-]%(Weather.feelslike_f)°F","%(Weather.temp_c)°C\_a\nFeels like: \_a[-]%(Weather.feelslike_c)°C")[_metric] + "\_a\n"
+		//"Temperature: %(h)" + ("%(Weather.temp_f)°F%(d)\nFeels like: %(h)%(Weather.feelslike_f)°F","%(Weather.temp_c)°C%(d)\nFeels like: %(h)%(Weather.feelslike_c)°C")[_metric] + "%(d)\n"
 		
-		"Humidity: \_a[-]%(Weather.humidity)%\_a\n"
+		"Humidity: %(h)%(Weather.humidity)%%(d)\n"
 		
-		if _metric; "Wind speed: \_a[-]%(Weather.wind_kph) kph\_a, \_a[-]%(Weather.wind_dir)\_a (\_a[-]%(Weather.wind_degree)°\_a)\n"
-		else; "Wind speed: \_a[-]%(Weather.wind_mph)mph\_a, \_a[-]%(Weather.wind_dir)\_a (\_a[-]%(Weather.wind_degree)°\_a)\n"
+		if _metric; "Wind speed: %(h)%(Weather.wind_kph) kph%(d), %(h)%(Weather.wind_dir)%(d) (%(h)%(Weather.wind_degree)°%(d))\n"
+		else; "Wind speed: %(h)%(Weather.wind_mph)mph%(d), %(h)%(Weather.wind_dir)%(d) (%(h)%(Weather.wind_degree)°%(d))\n"
 		
-		if _metric; "Gusts: \_a[-]%(Weather.gust_kph) kph\_a\n"
-		else; "Gusts: \_a[-]%(Weather.gust_mph)mph\_a\n"
+		if _metric; "Gusts: %(h)%(Weather.gust_kph) kph%(d)\n"
+		else; "Gusts: %(h)%(Weather.gust_mph)mph%(d)\n"
 		
-		"Chance of rain: \_a[-]"; EVAL("Forecast.0.Day.daily_chance_of_rain") + "%"; "\_a\n"
-		"Chance of snow: \_a[-]"; EVAL("Forecast.0.Day.daily_chance_of_snow") + "%"; "\_a\n"
+		"Chance of rain: %(h)"; EVAL("Forecast.0.Day.daily_chance_of_rain") + "%"; "%(d)\n"
+		"Chance of snow: %(h)"; EVAL("Forecast.0.Day.daily_chance_of_snow") + "%"; "%(d)\n"
 		
-		if _metric; "Precipitation: \_a[-]%(Weather.precip_mm) mm\_a\n"
-		else; "Precipitation: \_a[-]%(Weather.precip_in) inches\_a\n"
+		if _metric; "Precipitation: %(h)%(Weather.precip_mm) mm%(d)\n"
+		else; "Precipitation: %(h)%(Weather.precip_in) inches%(d)\n"
 		
-		if _metric; "Visibility: \_a[-]%(Weather.vis_km) km\_a\n"
-		else; "Visibility: \_a[-]%(Weather.vis_miles) miles\_a\n"
+		if _metric; "Visibility: %(h)%(Weather.vis_km) km%(d)\n"
+		else; "Visibility: %(h)%(Weather.vis_miles) miles%(d)\n"
 		
-		"Cloud cover: \_a[-]%(Weather.cloud)%\_a\n"
+		"Cloud cover: %(h)%(Weather.cloud)%%(d)\n"
 		
-		"UV Index: \_a[-]%(Weather.uv)\_a\n"
+		"UV Index: %(h)%(Weather.uv)%(d)\n"
 		
-		if _metric; "Pressure: \_a[-]%(Weather.pressure_mb) mb\_a\n"
-		else; "Pressure: \_a[-]%(Weather.pressure_in) inches\_a\n"
+		if _metric; "Pressure: %(h)%(Weather.pressure_mb) mb%(d)\n"
+		else; "Pressure: %(h)%(Weather.pressure_in) inches%(d)\n"
 		
 		//Air Quality Index
 		_aq_items = ("co","o3","no2","so2","pm2_5","pm10")
@@ -267,14 +267,14 @@ OnMenuExec : all
 		}
 		
 		"\nAir quality:  \f[anchorstyle,default](\![*]\_a[OnShortNumbersToggle]Short Numbers %(Settings.short_numbers)\_a)\f[anchorstyle,none]\n\n[half]"
-		"Carbon Monoxide: \_a[-]%(_co)\_a\n"
-		"Ozone: \_a[-]%(_o3)\_a\n"
-		"Nitrogen Dioxide: \_a[-]%(_no2)\_a\n"
-		"Sulphur Dioxide: \_a[-]%(_so2)\_a\n"
-		"PM2.5: \_a[-]%(_pm2_5)\_a\n"
-		"PM10: \_a[-]%(_pm10)\_a\n"
-		"US EPA standard: \_a[-]%(Weather.us_epa_index)\_a\n"
-		"UK Defra Index: \_a[-]%(Weather.gb_defra_index)\_a\n"
+		"Carbon Monoxide: %(h)%(_co)%(d)\n"
+		"Ozone: %(h)%(_o3)%(d)\n"
+		"Nitrogen Dioxide: %(h)%(_no2)%(d)\n"
+		"Sulphur Dioxide: %(h)%(_so2)%(d)\n"
+		"PM2.5: %(h)%(_pm2_5)%(d)\n"
+		"PM10: %(h)%(_pm10)%(d)\n"
+		"US EPA standard: %(h)%(Weather.us_epa_index)%(d)\n"
+		"UK Defra Index: %(h)%(Weather.gb_defra_index)%(d)\n"
 		//"Pollen: " //no pollen for now :( if someone knows of a good (free) pollen API please tell me!!
 	}
 	elseif _location == "(Not set)"
@@ -291,7 +291,7 @@ OnWeatherStationUpdate
 {
 	res_marker = version
 	
-	"\0\b2\_q\![set,autoscroll,disable]\f[anchorstyle,none]Weather Station will attempt to update. Most ghosts do not have dialogue for plugin updates; please run the plugin again once the update is complete. You can update manually by opening the Ghost Explorer with \_a[-]Ctrl + E\_a, changing the \_a[-]Type\_a tab to \_a[-]Plugin\_a, and right clicking on \_a[-]Weather Station\_a. The \_a[-]Network Update\_a option will update the plugin.\n\nThe latest version of Weather Station can always be downloaded from \_a[https://zichqec.github.io/s-the-skeleton/]Zichqec's website\_a.\n\nClick to continue...\x\![updateother,--plugin=Weather Station]Updating...\e"
+	"\0\b2\_q\![set,autoscroll,disable]\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]Weather Station will attempt to update. Most ghosts do not have dialogue for plugin updates; please run the plugin again once the update is complete. You can update manually by opening the Ghost Explorer with %(h)Ctrl + E%(d), changing the %(h)Type%(d) tab to %(h)Plugin%(d), and right clicking on %(h)Weather Station%(d). The %(h)Network Update%(d) option will update the plugin.\n\nThe latest version of Weather Station can always be downloaded from \_a[https://zichqec.github.io/s-the-skeleton/]Zichqec's website\_a.\n\nClick to continue...\x\![updateother,--plugin=Weather Station]Updating...\e"
 }
 
 //Menu for location, units, and if you want to let ghosts see your location data
@@ -302,8 +302,8 @@ OnSettingsMenu : all
 	_location = "(Not set)"
 	if UserInfo.location != ""; _location = UserInfo.location
 	
-	"\0\*\_q\b2\![set,autoscroll,disable]"
-	"\f[align,center]—Settings—\n \f[align,default]\n"
+	"\0\*\_q\b2\![set,autoscroll,disable]\f[anchorvisitedfontcolor,default.anchor]\![close,inputbox,OnWeatherLocation]"
+	"\f[align,center]— Settings —\n \f[align,default]\n"
 	//"Send: %(Info.Send_Weather_Now)\n"
 	"Location: \![*]\_a[OnChangeLocation]%(_location)\_a"
 
@@ -336,7 +336,7 @@ OnVarDisplay
 	{
 		_display += "%(_item): " + EVAL("%(_item)") + "\n"
 	}
-	"\![set,autoscroll,0]\b[2]\_q%(ARRAYSIZE(_list))\n\n%(_display)\x"
+	"\![set,autoscroll,0]\f[anchorvisitedfontcolor,default.anchor]\b[2]\_q%(ARRAYSIZE(_list))\n\n%(_display)\x"
 }
 
 //Removes all of the user's location data completely
@@ -414,7 +414,7 @@ OnForecastMenu.Daily : all
 	_DMY = _YMD[2,"-"] + "-" + _YMD[1,"-"] + "-" + _YMD[0,"-"]
 	_MDY = TOINT(_YMD[1,"-"]) + "-" + _YMD[2,"-"] + "-" + _YMD[0,"-"] //Hoping the TOINT here removes any leading 0s lol
 	
-	"\0\b2\_q\*\![set,autoscroll,disable]"
+	"\0\b2\_q\*\![set,autoscroll,disable]\f[anchorvisitedfontcolor,default.anchor]"
 	("\q[<<,OnPreviousForecastDay,%(_day)]","\f[color,disable]<<\f[color,default]")[_day <= 0]
 	
 	"%(newline)\f[align,center]"
@@ -430,16 +430,16 @@ OnForecastMenu.Daily : all
 	"\n \n\f[align,default]\f[anchorstyle,none]"
 	
 	//These EVALS are using a sort of pseudo ternary operator, to try and make things a bit cleaner. Need EVAL here so that I don't have to write all those var names manually for each forecast day...
-	"Max temp: \_a[-]"; EVAL(("Forecast.%(_day).Day.maxtemp_f + '°F'","Forecast.%(_day).Day.maxtemp_c + '°C'")[_metric]); "\_a\n"
-	"Min temp: \_a[-]"; EVAL(("Forecast.%(_day).Day.mintemp_f + '°F'","Forecast.%(_day).Day.mintemp_c + '°C'")[_metric]); "\_a\n"
-	"Average temp: \_a[-]"; EVAL(("Forecast.%(_day).Day.avgtemp_f + '°F'","Forecast.%(_day).Day.avgtemp_c + '°C'")[_metric]); "\_a\n"
-	"Average humidity: \_a[-]"; EVAL("Forecast.%(_day).Day.avghumidity") + "%"; "\_a\n"
-	"Max wind speed: \_a[-]"; EVAL(("Forecast.%(_day).Day.maxwind_mph + 'mph'","Forecast.%(_day).Day.maxwind_kph + ' kph'")[_metric]); "\_a\n"
+	"Max temp: %(h)"; EVAL(("Forecast.%(_day).Day.maxtemp_f + '°F'","Forecast.%(_day).Day.maxtemp_c + '°C'")[_metric]); "%(d)\n"
+	"Min temp: %(h)"; EVAL(("Forecast.%(_day).Day.mintemp_f + '°F'","Forecast.%(_day).Day.mintemp_c + '°C'")[_metric]); "%(d)\n"
+	"Average temp: %(h)"; EVAL(("Forecast.%(_day).Day.avgtemp_f + '°F'","Forecast.%(_day).Day.avgtemp_c + '°C'")[_metric]); "%(d)\n"
+	"Average humidity: %(h)"; EVAL("Forecast.%(_day).Day.avghumidity") + "%"; "%(d)\n"
+	"Max wind speed: %(h)"; EVAL(("Forecast.%(_day).Day.maxwind_mph + 'mph'","Forecast.%(_day).Day.maxwind_kph + ' kph'")[_metric]); "%(d)\n"
 	"\n"
-	"Total precipitation: \_a[-]"; EVAL(("Forecast.%(_day).Day.totalprecip_in + ' inches'","Forecast.%(_day).Day.totalprecip_mm + ' mm'")[_metric]); "\_a\n"
-	"Chance of rain: \_a[-]"; EVAL("Forecast.%(_day).Day.daily_chance_of_rain") + "%"; "\_a\n"
-	"Chance of snow: \_a[-]"; EVAL("Forecast.%(_day).Day.daily_chance_of_snow") + "%"; "\_a\n"
-	"Average Visibility: \_a[-]"; EVAL(("Forecast.%(_day).Day.avgvis_miles + ' miles'","Forecast.%(_day).Day.avgvis_km + ' km'")[_metric]); "\_a\n\n"
+	"Total precipitation: %(h)"; EVAL(("Forecast.%(_day).Day.totalprecip_in + ' inches'","Forecast.%(_day).Day.totalprecip_mm + ' mm'")[_metric]); "%(d)\n"
+	"Chance of rain: %(h)"; EVAL("Forecast.%(_day).Day.daily_chance_of_rain") + "%"; "%(d)\n"
+	"Chance of snow: %(h)"; EVAL("Forecast.%(_day).Day.daily_chance_of_snow") + "%"; "%(d)\n"
+	"Average Visibility: %(h)"; EVAL(("Forecast.%(_day).Day.avgvis_miles + ' miles'","Forecast.%(_day).Day.avgvis_km + ' km'")[_metric]); "%(d)\n\n"
 	
 	//Astronomy info display, handled below
 	AstronomyDisplay(_day)
@@ -524,7 +524,7 @@ OnForecastMenu.Hourly : all
 	_date_imperial = "%(_MDY) %(_12h)"
 	_date_metric = "%(_DMY) %(_24h):00"
 	
-	"\0\b2\_q\*\![set,autoscroll,disable]"
+	"\0\b2\_q\*\![set,autoscroll,disable]\f[anchorvisitedfontcolor,default.anchor]"
 	("\q[<<,OnPreviousForecastHour,%(_day),%(_hour)]","\f[color,disable]<<\f[color,default]")[_hour <= 0 && _day <= 0]
 	
 	"%(newline)\f[align,center]"
@@ -540,21 +540,21 @@ OnForecastMenu.Hourly : all
 	
 	("Nighttime","Daytime")[TOINT(_is_day)]
 	"\n"
-	"Temperature: \_a[-]"; (_temp_f + "°F",_temp_c + "°C")[_metric]; "\_a\n"
-	"Feels like: \_a[-]"; (_feelslike_f + "°F",_feelslike_c + "°C")[_metric]; "\_a\n"
-	"Humidity: \_a[-]%(_humidity)%\_a\n"
-	"Wind speed: \_a[-]"; (_wind_mph + "mph",_wind_kph + " kph")[_metric]; "\_a, \_a[-]%(_dir)\_a (\_a[-]%(_degree)°\_a)\n"
-	"Gusts: \_a[-]"; (_gust_mph + "mph",_gust_kph + " kph")[_metric]; "\_a\n"
-	"Precipitation: \_a[-]"; (_precip_in + " inches",_precip_mm + " mm")[_metric]; "\_a\n"
-	"Cloud cover: \_a[-]%(_cloud)%\_a\n"
-	"Chance of rain: \_a[-]%(_chance_of_rain)%\_a\n"
-	"Chance of snow: \_a[-]%(_chance_of_snow)%\_a\n"
-	"Visibility: \_a[-]"; (_vis_miles + " miles",_vis_km + " km")[_metric]; "\_a\n"
-	"Wind chill: \_a[-]"; (_windchill_f + "°F",_windchill_c + "°C")[_metric]; "\_a\n"
-	"Heat index: \_a[-]"; (_heatindex_f + "°F",_heatindex_c + "°C")[_metric]; "\_a\n"
-	"Dew point: \_a[-]"; (_dewpoint_f + "°F",_dewpoint_c + "°C")[_metric]; "\_a\n"
-	"Pressure: \_a[-]"; (_pressure_in + " inches",_pressure_mb + " mb")[_metric]; "\_a\n"
-	"UV Index: \_a[-]%(_uv)\_a\n"
+	"Temperature: %(h)"; (_temp_f + "°F",_temp_c + "°C")[_metric]; "%(d)\n"
+	"Feels like: %(h)"; (_feelslike_f + "°F",_feelslike_c + "°C")[_metric]; "%(d)\n"
+	"Humidity: %(h)%(_humidity)%%(d)\n"
+	"Wind speed: %(h)"; (_wind_mph + "mph",_wind_kph + " kph")[_metric]; "%(d), %(h)%(_dir)%(d) (%(h)%(_degree)°%(d))\n"
+	"Gusts: %(h)"; (_gust_mph + "mph",_gust_kph + " kph")[_metric]; "%(d)\n"
+	"Precipitation: %(h)"; (_precip_in + " inches",_precip_mm + " mm")[_metric]; "%(d)\n"
+	"Cloud cover: %(h)%(_cloud)%%(d)\n"
+	"Chance of rain: %(h)%(_chance_of_rain)%%(d)\n"
+	"Chance of snow: %(h)%(_chance_of_snow)%%(d)\n"
+	"Visibility: %(h)"; (_vis_miles + " miles",_vis_km + " km")[_metric]; "%(d)\n"
+	"Wind chill: %(h)"; (_windchill_f + "°F",_windchill_c + "°C")[_metric]; "%(d)\n"
+	"Heat index: %(h)"; (_heatindex_f + "°F",_heatindex_c + "°C")[_metric]; "%(d)\n"
+	"Dew point: %(h)"; (_dewpoint_f + "°F",_dewpoint_c + "°C")[_metric]; "%(d)\n"
+	"Pressure: %(h)"; (_pressure_in + " inches",_pressure_mb + " mb")[_metric]; "%(d)\n"
+	"UV Index: %(h)%(_uv)%(d)\n"
 	
 	"\n\n\![*]\q[Daily forecast,OnForecastMenu.Daily,%(reference[0])]"
 	"\n\![*]\q[Back,OnMenuExec]\e"
@@ -592,28 +592,28 @@ AstronomyDisplay : all
 	_sunrise_24 = Twelve_to_24(_sunrise_12)
 	if TOINT(_sunrise_12[0,":"]) < 10; _sunrise_12 = TOINT(_sunrise_12[0,":"]) + ":" + _sunrise_12[1,":"] //If there is a leading 0, get rid of it
 	if _sunrise_12 == "No sunrise"; _sunrise_24 = _sunrise_12 //If there is no sunrise, make sure it says that for the metric version too | MIGHT BE ABLE TO GET RID OF THIS NOW, IDK AND I CAN'T TEST UNTIL THIS COMES AROUND AGAIN
-	"Sunrise: \_a[-]"; (_sunrise_12,_sunrise_24)[_metric]; "\_a\n"
+	"Sunrise: %(h)"; (_sunrise_12,_sunrise_24)[_metric]; "%(d)\n"
 	
 	_sunset_12 = EVAL("Forecast.%(_day).Astro.sunset")
 	_sunset_24 = Twelve_to_24(_sunset_12)
 	if TOINT(_sunset_12[0,":"]) < 10; _sunset_12 = TOINT(_sunset_12[0,":"]) + ":" + _sunset_12[1,":"]
 	if _sunset_12 == "No sunset"; _sunset_24 = _sunset_12
-	"Sunset: \_a[-]"; (_sunset_12,_sunset_24)[_metric]; "\_a\n\n"
+	"Sunset: %(h)"; (_sunset_12,_sunset_24)[_metric]; "%(d)\n\n"
 	
 	_moonrise_12 = EVAL("Forecast.%(_day).Astro.moonrise")
 	_moonrise_24 = Twelve_to_24(_moonrise_12)
 	if TOINT(_moonrise_12[0,":"]) < 10; _moonrise_12 = TOINT(_moonrise_12[0,":"]) + ":" + _moonrise_12[1,":"]
 	if _moonrise_12 == "No moonrise"; _moonrise_24 = _moonrise_12
-	"Moonrise: \_a[-]"; (_moonrise_12,_moonrise_24)[_metric]; "\_a\n"
+	"Moonrise: %(h)"; (_moonrise_12,_moonrise_24)[_metric]; "%(d)\n"
 	
 	_moonset_12 = EVAL("Forecast.%(_day).Astro.moonset")
 	_moonset_24 = Twelve_to_24(_moonset_12)
 	if TOINT(_moonset_12[0,":"]) < 10; _moonset_12 = TOINT(_moonset_12[0,":"]) + ":" + _moonset_12[1,":"]
 	if _moonset_12 == "No moonset"; _moonset_24 = _moonset_12
-	"Moonset: \_a[-]"; (_moonset_12,_moonset_24)[_metric]; "\_a\n\n"
+	"Moonset: %(h)"; (_moonset_12,_moonset_24)[_metric]; "%(d)\n\n"
 	
-	"Moon phase: \_a[-]"; EVAL("Forecast.%(_day).Astro.moon_phase"); "\_a \n"
-	"Illumination: \_a[-]"; EVAL("Forecast.%(_day).Astro.moon_illumination"); "%\_a    \_b[img/moon_0%(PhaseNum(_day)),inline,--option=use_self_alpha]\n"
+	"Moon phase: %(h)"; EVAL("Forecast.%(_day).Astro.moon_phase"); "%(d) \n"
+	"Illumination: %(h)"; EVAL("Forecast.%(_day).Astro.moon_illumination"); "%%(d)    \_b[img/moon_0%(PhaseNum(_day)),inline,--option=use_self_alpha]\n"
 }
 
 //Convert 12hr to 24hr
@@ -660,8 +660,8 @@ OnAstronomyMenu : all
 {
 	res_marker = version
 	
-	"\0\b2\*\![set,autoscroll,disable]\_q\f[anchorstyle,none]"
-	"\f[align,center]—Astronomy—\n \f[align,default]\n"
+	"\0\b2\*\![set,autoscroll,disable]\_q\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]"
+	"\f[align,center]— Astronomy —\n \f[align,default]\n"
 	AstronomyDisplay(0)
 	"\n\n\![*]\q[Back,OnMenuExec]"
 }
@@ -674,7 +674,7 @@ OnWeatherAlertMenu : all
 	_info = SPLIT(Weather.alerts[_alert],C_BYTE1)
 	res_marker = version
 	
-	"\0\b2\*\![set,autoscroll,disable]\_q\f[anchorstyle,none]"
+	"\0\b2\*\![set,autoscroll,disable]\_q\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]"
 	
 	("\q[<<,OnPreviousAlert,%(_alert)]","\f[color,disable]<<\f[color,default]")[_alert <= 0]
 	
@@ -698,7 +698,7 @@ OnWeatherAlertMenu : all
 			_inf = REPLACE(_inf,"T"," ")
 		}
 		
-		if _inf != ""; "%(Capitalize(_tag)): \_a[-]%(_inf)\_a\n"
+		if _inf != ""; "%(Capitalize(_tag)): %(h)%(_inf)%(d)\n"
 		_i++
 	}
 	
@@ -843,7 +843,7 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 				_temp = ""
 				foreach AlertTags; _tag
 				{
-					LOGGING("TAG %(_TAG)")
+					//LOGGING("TAG %(_TAG)") //lol this is written with the wrong var name anyways
 					_getinfo = ExtractXML(_alert,_tag)
 					if _temp != ""; _temp += C_BYTE1
 					//EVAL("_temp += '%(_getinfo)'") //Having this here makes it break if there's a ' in the name..... but apparently I don't need this EVAL? Idk
@@ -1077,6 +1077,7 @@ OnWeatherStation.Error
 	
 	res_reference[3] = Info.last_update[5]
 	res_reference[4] = version_num
+	res_reference[5] = Info.update_available
 }
 
 //Changing locations
@@ -1122,7 +1123,7 @@ OnWeatherLocation
 			_display += "\![*]\__q[OnWeatherLocationChosen,%(_url),%(_nocomma), %(_lat), %(_lon)]%(_name)\__q\n\n[half]" //There are spaces here to ensure these are transferred as strings and not ints
 		}
 		
-		"\*\_q\b2\![set,autoscroll,disable]"
+		"\*\_q\b2\![set,autoscroll,disable]\f[anchorvisitedfontcolor,default.anchor]"
 		--
 		"\![*]\q[Back,OnSettingsMenu]\n\n"
 		--
