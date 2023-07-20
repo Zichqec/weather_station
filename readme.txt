@@ -5,7 +5,7 @@ Ghosts cannot see your location data unless you explicitly turn this setting on 
 Please note: I have had trouble running this plugin on my Windows 7 computer, but someone else tried it on Windows 7 and it worked fine. If it will not show any results when you search your location, please get in contact! I would love to try and figure out why this happens and if I can fix it.
 
 
-Weather Station v1.0.0
+Weather Station v1.0.1
 Made by Zichqec https://zichqec.github.io/s-the-skeleton/
 Using Weather API https://www.weatherapi.com/
 
@@ -72,3 +72,17 @@ If there is any sort of error, such as the location not being valid or the API n
 A full list of events sent by the plugin, as well as the references associated with them, is available in events_reference.txt.
 
 Please note: I only get 1 million free API calls a month. If you're a developer and that limit worries you, please check the note near the top of main.dic about it. My code uses weatherapi.com to get the weather, and you are welcome to use anything you find in main.dic and envelopes.dic! I would appreciate a link back to me if you use my code. You are also welcome to use my moon icons to display the moon phase, if you'd like.
+
+
+
+—————————— Version History ——————————
+
+
+—v1.0.1—
+
+• Fixed a bug where if a weather alert contained an apostrophe, it would break it and make ghosts read out part of the weather alert when loaded in.
+
+
+—v1.0.0—
+
+• Initial release

@@ -846,7 +846,8 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 					LOGGING("TAG %(_TAG)")
 					_getinfo = ExtractXML(_alert,_tag)
 					if _temp != ""; _temp += C_BYTE1
-					EVAL("_temp += '%(_getinfo)'")
+					//EVAL("_temp += '%(_getinfo)'") //Having this here makes it break if there's a ' in the name..... but apparently I don't need this EVAL? Idk
+					_temp += _getinfo
 				}
 				Weather.alerts ,= _temp
 				

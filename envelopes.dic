@@ -74,7 +74,7 @@ version
 //Don't forget to update this, me!
 version_num
 {
-	"1.0.0"
+	"1.0.1"
 }
 
 //These are all the categories that the API sends over. I think I may have slightly rearranged the order to something that made more sense to me. They are separated into different groups, based on the groups the API sends over.
