@@ -1,4 +1,4 @@
-This information should also be available on the external SHIORI events page of Ukadoc! http://ssp.shillest.net/ukadoc/manual/list_shiori_event_ex.html
+This information should also be available on the external SHIORI events page of Ukadoc! https://ukagakadreamteam.github.io/ukadoc/manual/list_shiori_event_ex.html
 
 —————————— OnWeatherStation.Weather ——————————
 
