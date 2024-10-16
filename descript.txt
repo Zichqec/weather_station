@@ -4,6 +4,7 @@ name,Weather Station
 id,FD4ECF7C-50C5-47AE-2DBF-B2B7BF08D8BA
 filename,yaya.dll
 craftman,Zichqec
-craftmanurl,https://zichqec.github.io/s-the-skeleton/
+craftmanw,Zichqec
+craftmanurl,https://ukagaka.zichqec.com/
 homeurl,https://raw.githubusercontent.com/Zichqec/weather_station/main/
 secondchangeinterval,1

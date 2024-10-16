@@ -289,7 +289,7 @@ OnWeatherStationUpdate
 {
 	res_marker = version
 	
-	"\0\b2\_q\![set,autoscroll,disable]\![no-autopause]\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]Weather Station will attempt to update. Most ghosts do not have dialogue for plugin updates; please run the plugin again once the update is complete. You can update manually by opening the Ghost Explorer with %(h)Ctrl + E%(d), changing the %(h)Type%(d) tab to %(h)Plugin%(d), and right clicking on %(h)Weather Station%(d). The %(h)Network Update%(d) option will update the plugin.\n\nThe latest version of Weather Station can always be downloaded from \_a[https://zichqec.github.io/s-the-skeleton/]Zichqec's website\_a.\n\nClick to continue...\x\![updateother,--plugin=Weather Station]Updating...\e"
+	"\0\b2\_q\![set,autoscroll,disable]\![no-autopause]\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]Weather Station will attempt to update. Most ghosts do not have dialogue for plugin updates; please run the plugin again once the update is complete.\n\nYou can also update manually by opening the Ghost Explorer with %(h)Ctrl + E%(d), changing the %(h)Type%(d) tab to %(h)Plugin%(d), and right clicking on %(h)Weather Station%(d). The %(h)Network Update%(d) option will update the plugin.\n\nThe latest version of Weather Station can always be downloaded from \_a[https://ukagaka.zichqec.com/]Zichqec's website\_a.\n\nClick to continue...\x\![updateother,--plugin=Weather Station]Updating...\e"
 }
 
 //Menu for location, units, and if you want to let ghosts see your location data
