@@ -5,14 +5,14 @@ Ghosts cannot see your location data unless you explicitly turn this setting on 
 Please note: I have had trouble running this plugin on my Windows 7 computer, but someone else tried it on Windows 7 and it worked fine. If it will not show any results when you search your location, please get in contact! I would love to try and figure out why this happens and if I can fix it.
 
 
-Weather Station v1.0.3
-Made by Zichqec https://zichqec.github.io/s-the-skeleton/
+Weather Station v1.0.4
+Made by Zichqec https://ukagaka.zichqec.com/
 Using Weather API https://www.weatherapi.com/
 Repository here https://github.com/Zichqec/weather_station
 
-—————————— Developer Info ——————————
 
-Information on the references for each event can be found on the external SHIORI page of Ukadoc ( http://ssp.shillest.net/ukadoc/manual/list_shiori_event_ex.html ), or in events_reference.txt.
+—————————— Developer Info ——————————
+Information on the references for each event can be found on the external SHIORI page of Ukadoc ( https://ukagakadreamteam.github.io/ukadoc/manual/list_shiori_event_ex.html ), or in events_reference.txt.
 
 After the user has entered their location, this plugin will send the event OnWeatherStation.Weather every hour on the hour, every time a ghost boots, and any time a ghost calls it with raiseplugin. Note that it is always sent to all open ghosts, no matter how it is called. I do not recommend putting dialogue in here! Just use it to update variables in your ghost.
 
@@ -72,35 +72,42 @@ If there is any sort of error, such as the location not being valid or the API n
 
 A full list of events sent by the plugin, as well as the references associated with them, is available in events_reference.txt.
 
-Please note: I only get 1 million free API calls a month. If you're a developer and that limit worries you, please check the note near the top of main.dic about it. My code uses weatherapi.com to get the weather, and you are welcome to use anything you find in main.dic and envelopes.dic! I would appreciate a link back to me if you use my code. You are also welcome to use my moon icons to display the moon phase, if you'd like.
-
+Please note: I only get 1 million free API calls a month. If you're a developer and that limit worries you, please check the note near the top of main.dic about it. My code uses weatherapi.com to get the weather, and you are welcome to use anything you find in main.dic and envelopes.dic in your own ghost! I would appreciate a link back to me if you use my code. You are also welcome to use my moon icons to display the moon phase, if you'd like.
 
 
 —————————— Version History ——————————
 
+— v1.0.4 —
+
+- Updated permissions notes in main.dic and readme, since they were not entirely clear before.
+- Removed the "short numbers" option for the air quality data, since weather API seems to now be shortening these numbers themselves.
+- Updated some old links.
+
+
 — v1.0.3 —
 
-• Fixed an issue where if a location search only returned a single result, it would say there were none.
-• Fixed an issue where the references in the daily forecast for average humidity and maximum wind speed in mph were swapped.
-• Fixed an issue where metric time would not show the "No sunrise" etc. displays (I think, I did this so long ago I'm not positive).
-• Made emdashes always appear in the font Calibri, to avoid tofus on balloons with special fonts.
-• Added a \![no-autopause] tag to menus for ghosts using my autopause system, so that they should display menus instantly.
-• Gave Weather Station its own github repo where changes can be tracked, and changed the homeurl accordingly.
+- Fixed an issue where if a location search only returned a single result, it would say there were none.
+- Fixed an issue where the references in the daily forecast for average humidity and maximum wind speed in mph were swapped.
+- Fixed an issue where metric time would not show the "No sunrise" etc. displays (I think, I did this so long ago I'm not positive).
+- Made emdashes always appear in the font Calibri, to avoid tofus on balloons with special fonts.
+- Added a \![no-autopause] tag to menus for ghosts using my autopause system, so that they should display menus instantly.
+- Gave Weather Station its own github repo where changes can be tracked, and changed the homeurl accordingly.
+
 
 — v1.0.2 —
 
-• Fixed the documentation having a couple of references in the wrong order.
-• Changed the display to use plain text highlighting instead of anchors. This will not work on older versions of SSP, but fixes an issue where the balloon could time out if they were clicked.
-• Cancelling the location search menu will now close the input box.
-• Added an additional reference to OnWeatherStation.Error that indicates whether an update is available for the plugin.
-• Updated to YAYAtc571-3.
+- Fixed the documentation having a couple of references in the wrong order.
+- Changed the display to use plain text highlighting instead of anchors. This will not work on older versions of SSP, but fixes an issue where the balloon could time out if they were clicked.
+- Cancelling the location search menu will now close the input box.
+- Added an additional reference to OnWeatherStation.Error that indicates whether an update is available for the plugin.
+- Updated to YAYAtc571-3.
 
 
 — v1.0.1 —
 
-• Fixed a bug where if a weather alert contained an apostrophe, it would break it and make ghosts read out part of the weather alert when loaded in.
+- Fixed a bug where if a weather alert contained an apostrophe, it would break it and make ghosts read out part of the weather alert when loaded in.
 
 
 — v1.0.0 —
 
-• Initial release
+- Initial release

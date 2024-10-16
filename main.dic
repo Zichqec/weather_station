@@ -23,42 +23,47 @@
 // http://emily.shillest.net/specwiki/index.php?PLUGIN%2F2.0%2F%E4%BB%95%E6%A7%98%E6%9B%B8
 
 
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//=============USING THIS CODE IN YOUR OWN GHOST? READ BELOW=============
-//Glad you find it interesting/useful! This plugin is entirely open source and you are free to take the code in main.dic and envelopes.dic and use it in your own ghosts. The other files come with YAYA as Plugin, so I can't speak for those. I would appreciate a link back to me (https://zichqec.github.io/s-the-skeleton/) if you use my work!
-//Please note that the weather API I used only gets 1 million free API calls a month, so PLEASE DO NOT USE MY API KEY! I'm already worried about the number of API calls I might rack up from multiple people running this plugin and getting the weather every hour that SSP is open! Plus, you don't want to have to worry about your ghost running out of API calls because of my plugin, do you?
-//You can get your own API key COMPLETELY FREE by signing up for an account on weatherapi.com, here https://www.weatherapi.com/
-//If you're not sure what to do, get in contact and I will gladly help you out! Thanks!
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//Glad you find it interesting/useful! You are welcome to copy any of the code from the main.dic and envelopes.dic files and use it in your own ghosts. The other files come with YAYA as Plugin, so I can't speak for those.
+
+//If you want to bundle the plugin with your ghost: that's perfectly fine, feel free to do so. Just note that it may become out of date over time.
+
+//If you want to integrate this code into your ghost: that's also fine. Please credit me in your ghost's readme, with a link back to my site! https://ukagaka.zichqec.com/
+//If you integrate the code into your own ghost, **PLEASE DO NOT USE MY API KEY**. I only get 1 million free API calls a month, so if you're putting it in something other than the plugin, I think it only makes sense to have your own key to spread out the load. You can get a completely free API key by signing up for Weather API here: https://www.weatherapi.com/
+
+//Please DO NOT modify (or encourage users to modify) the API key in the original plugin. I do not allow modifications of the plugin itself to be distributed, nor do I want to abuse a service that I am making use of at no cost. My request that you get your own API key *only* applies if you are integrating the code into *your own ghost*, because that would make them two different "applications", so to say.
+
 #define __API_KEY__ 08f40be4a6fb4edd9d361756211508
 
 #define	C_BYTE1		CHR(0x1)
@@ -156,7 +161,6 @@ OnMenuExec : all
 	
 	if !ISVAR("Settings.share_location"); Settings.share_location = "Off"
 	if !ISVAR("Settings.units"); Settings.units = "Imperial"
-	if !ISVAR("Settings.short_numbers"); Settings.short_numbers = "On"
 	
 	_metric = Settings.units == "Metric"
 
@@ -258,15 +262,9 @@ OnMenuExec : all
 		foreach _aq_items; _item
 		{
 			void EVAL("_%(_item) = Weather.%(_item)")
-			if Settings.short_numbers == "On"
-			{
-				void EVAL("_temp = _%(_item)")
-				if "." _in_ _temp; _temp = _temp[0,"."] + "." + SUBSTR(_temp[1,"."],0,2)
-				void EVAL("_%(_item) = _temp")
-			}
 		}
 		
-		"\nAir quality:  \f[anchorstyle,default](\![*]\_a[OnShortNumbersToggle]Short Numbers %(Settings.short_numbers)\_a)\f[anchorstyle,none]\n\n[half]"
+		"\nAir quality:\n\n[half]"
 		"Carbon Monoxide: %(h)%(_co)%(d)\n"
 		"Ozone: %(h)%(_o3)%(d)\n"
 		"Nitrogen Dioxide: %(h)%(_no2)%(d)\n"
@@ -364,13 +362,6 @@ OnToggleLocationData
 	if Settings.share_location != "Off"; Settings.share_location = "Off"
 	else; Settings.share_location = "On"
 	OnSettingsMenu
-}
-
-OnShortNumbersToggle
-{
-	if Settings.short_numbers != "On"; Settings.short_numbers = "On"
-	else; Settings.short_numbers = "Off"
-	OnMenuExec
 }
 
 //Change how often the weather auto-updates - removed this option because I'm pretty sure the API only updates every 15 minutes or so, and I am also worried about API calls...
