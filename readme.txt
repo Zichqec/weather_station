@@ -5,7 +5,7 @@ Ghosts cannot see your location data unless you explicitly turn this setting on 
 Please note: I have had trouble running this plugin on my Windows 7 computer, but someone else tried it on Windows 7 and it worked fine. If it will not show any results when you search your location, please get in contact! I would love to try and figure out why this happens and if I can fix it.
 
 
-Weather Station v1.0.4
+Weather Station v1.0.5
 Made by Zichqec https://ukagaka.zichqec.com/
 Plugin repository here https://github.com/Zichqec/weather_station
 Using Weather API https://www.weatherapi.com/
@@ -76,6 +76,10 @@ Please note: I only get 1 million free API calls a month. If you're a developer 
 
 
 —————————— Version History ——————————
+
+— v1.0.5 —
+- When offline, the update available indicator will no longer appear.
+- When offline or the weather cannot be fetched, the forecast and astronomy menus will be grayed out and inaccessible.
 
 
 — v1.0.4 —
