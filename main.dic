@@ -1102,7 +1102,7 @@ OnWeatherStation.Error
 OnChangeLocation
 {
 	res_marker = version
-	"\![quicksection,true]\*\![open,inputbox,OnWeatherLocation,-1]"
+	"\![quicksection,true]\*\![open,inputbox,OnWeatherLocation,-1]\![no-autopause]"
 	--
 	"Write the name or latitude and longitude of your city to search for it. If in the US, you can use a zip code. If in the UK, you can use a postcode. If in Canada, you can use a postal code.\n\n\![*]\q[Back,OnSettingsMenu]\e"
 }
