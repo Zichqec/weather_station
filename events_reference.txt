@@ -157,10 +157,10 @@ reference0: The error message. Possible messages are:
 	"api_quota_exceeded" for if the 1 million free API calls have run out for the month.
 	"api_key_disabled" for if I ever have to disable the API key.
 	"api_internal_error" for if the API has an error on its end.
-	"no_api_response" for if the API does not respond at all.
-	"other" for any other error. reference1 will have the proper error message in this case. But this should not come up.
+	"no_api_response" for if the API does not respond at all. This can indicate a problem with weatherapi.com, an issue with the SAORI, or the user may be offline.
+	"other" for any other error. reference1 will have the proper error message in this case, but this should not come up.
 reference1: A more verbose error message. THIS DOES NOT MATCH THE MESSAGES ON weatherapi.com's DOCUMENTATION. I could not find a list of what the error messages would actually be.
 reference2: The error code, as listed on weatherapi.com's documentation.
 reference3: The time the plugin last attempted to update the weather data, in seconds since EPOCH (1970/1/1 00:00:00).
 reference4: The current version number of the plugin.
-reference5: 1 if there is a plugin update available, 0 otherwise.
+reference5: 1 if there is a plugin update available, 0 otherwise. Note that if the user is offline, this will always be 0.

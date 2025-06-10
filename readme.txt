@@ -7,8 +7,8 @@ Please note: I have had trouble running this plugin on my Windows 7 computer, bu
 
 Weather Station v1.0.4
 Made by Zichqec https://ukagaka.zichqec.com/
+Plugin repository here https://github.com/Zichqec/weather_station
 Using Weather API https://www.weatherapi.com/
-Repository here https://github.com/Zichqec/weather_station
 
 
 —————————— Developer Info ——————————
@@ -77,15 +77,14 @@ Please note: I only get 1 million free API calls a month. If you're a developer 
 
 —————————— Version History ——————————
 
-— v1.0.4 —
 
+— v1.0.4 —
 - Updated permissions notes in main.dic and readme, since they were not entirely clear before.
 - Removed the "short numbers" option for the air quality data, since weather API seems to now be shortening these numbers themselves.
 - Updated some old links.
 
 
 — v1.0.3 —
-
 - Fixed an issue where if a location search only returned a single result, it would say there were none.
 - Fixed an issue where the references in the daily forecast for average humidity and maximum wind speed in mph were swapped.
 - Fixed an issue where metric time would not show the "No sunrise" etc. displays (I think, I did this so long ago I'm not positive).
@@ -95,7 +94,6 @@ Please note: I only get 1 million free API calls a month. If you're a developer 
 
 
 — v1.0.2 —
-
 - Fixed the documentation having a couple of references in the wrong order.
 - Changed the display to use plain text highlighting instead of anchors. This will not work on older versions of SSP, but fixes an issue where the balloon could time out if they were clicked.
 - Cancelling the location search menu will now close the input box.
@@ -104,10 +102,8 @@ Please note: I only get 1 million free API calls a month. If you're a developer 
 
 
 — v1.0.1 —
-
 - Fixed a bug where if a weather alert contained an apostrophe, it would break it and make ghosts read out part of the weather alert when loaded in.
 
 
 — v1.0.0 —
-
 - Initial release
