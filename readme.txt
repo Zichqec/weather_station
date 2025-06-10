@@ -78,7 +78,7 @@ Please note: I only get 1 million free API calls a month. If you're a developer 
 —————————— Version History ——————————
 
 — v1.0.5 —
-- When offline, the update available indicator will no longer appear.
+- When offline, the "update available" indicator will no longer appear.
 - When offline or the weather cannot be fetched, the forecast and astronomy menus will be grayed out and inaccessible.
 
 
