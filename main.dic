@@ -109,7 +109,10 @@ CheckForUpdates
 	_t = FUNCTIONEX("saori/httpc.dll","https://zichqec.github.io/s-the-skeleton/weatherregex")
 	_ver = SPLIT(_t,"WEATHER_STATION_VER--")[1]
 	_ver = SPLIT(_ver,"--WEATHER_STATION_VER")[0]
-	if _ver != version_num; Info.update_available = 1
+	if _ver != ""
+	{
+		if _ver != version_num; Info.update_available = 1
+	}
 	LOGGING(_ver)
 	LOGGING(version_num)
 }
@@ -176,7 +179,7 @@ OnMenuExec : all
 	//"\n\q[Display All Vars,OnVarDisplay]\n\n"
 
 	
-	if HasWeatherData || Info.error_code != ""
+	if HasWeatherData
 	{
 		"\![*]"
 		if ARRAYSIZE(Weather.alerts) >= 1
@@ -190,6 +193,12 @@ OnMenuExec : all
 		"\n\![*]\__q[OnForecastMenu.Daily]Forecast\__q  \![*]\__q[OnAstronomyMenu]Astronomy\__q    %(MoonIcon)"
 		
 		//"\_l[,@-1em]          %(MoonIcon)\n"
+	}
+	else //Error or no data
+	{
+		"\f[color,disable]\![*]"
+		"Weather alerts (0)"
+		"\n\![*]Forecast  \![*]Astronomy    %(MoonIcon)\f[color,default]"
 	}
 	
 	
