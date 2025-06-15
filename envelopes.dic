@@ -168,12 +168,11 @@ ExtractXML
 	_output
 }
 
-//Capitalizes the first letter of words/envelopes you send to it
+//Capitalizes the first letter of words/word groups you send to it
 Capitalize
 {
-	_word = _argv[0] //Sets _word to the word the user sent
-	_buffer = SUBSTR(_word,0,1) //Storing the first character in _buffer
-	_word = ERASE(_word,0,1) //Erasing the first character from _word
-	_word = INSERT(_word,0,TOUPPER(_buffer)) //Making the character in _buffer uppercase and inserting it back into _word
-	_word //Returns the capitalized word
+	_first = SUBSTR(_argv[0],0,1)
+	_rest = ERASE(_argv[0],0,1)
+	
+	TOUPPER(_first) + _rest
 }
