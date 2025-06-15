@@ -68,7 +68,6 @@
 
 #define	C_BYTE1		CHR(0x1)
 
-//I think this happens any time the plugin is loaded, as the name would imply. Probably when SSP starts?
 PluginLoad
 {
 	Info.update_available = 0
@@ -87,14 +86,11 @@ PluginLoad
 
 OnTestThing
 {
-	//UserInfo.location = "a place"
-	//UserInfo.location_url = "sdkjfhsdkjfhskfdj"
 	"\![open,readme,Weather Station]"
 	--
 	OnMenuExec
 }
 
-//I think this happens any time the plugin is unloaded, as the name would imply. Probably when SSP closes?
 PluginUnload
 {
 	Info.update_available = 0
@@ -119,18 +115,7 @@ CheckForUpdates
 
 ClearWeatherData
 {
-	// ERASEVAR("Weather.condition")
-	// ERASEVAR("Weather.condition_icon")
-	// ERASEVAR("Weather.condition_code")
-	// ERASEVAR("Weather.alerts")
 	 Info.Send_Weather_Now = 0
-	// foreach CurrentWeatherTags; _var
-	// {
-		// ERASEVAR("Weather.%(REPLACE(_var,'-','_'))")
-	// }
-	LOGGING("====================================================================")
-	LOGGING("VARS BEFORE")
-	LOGGING(GETVARLIST)
 	
 	_varlist = IARRAY
 	_varlist ,= GETVARLIST("Weather.")
@@ -141,9 +126,6 @@ ClearWeatherData
 		ERASEVAR("%(_var)")
 		
 	}
-	LOGGING("====================================================================")
-	LOGGING("VARS AFTER")
-	LOGGING(GETVARLIST)
 }
 
 ClearErrors
@@ -152,13 +134,11 @@ ClearErrors
 	ERASEVAR("Info.error_message")
 }
 
-//This function is called when the user clicks on the plugin through the right click menu
+//Main plugin menu
 OnMenuExec : all
 {
-	//This sets up the little 'Weather Station v(version) in the balloon, so the user knows what this is
 	res_marker = version
 	
-	//Set some defaults
 	_location = "(Not set)"
 	if UserInfo.location != ""; _location = UserInfo.location
 	
@@ -190,8 +170,6 @@ OnMenuExec : all
 			"\f[color,disable]Weather alerts (0)\f[color,default]"
 		}
 		"\n\![*]\__q[OnForecastMenu.Daily]Forecast\__q  \![*]\__q[OnAstronomyMenu]Astronomy\__q    %(MoonIcon)"
-		
-		//"\_l[,@-1em]          %(MoonIcon)\n"
 	}
 	else //Error or no data
 	{
@@ -216,7 +194,6 @@ OnMenuExec : all
 	"\n\![*]\__q[OnSettingsMenu]Settings\__q"
 	"\n\n"
 
-	//"Lat: %(UserInfo.latitude)  Lon: %(UserInfo.longitude)\n%(GETTYPE(UserInfo.latitude))"
 	if !(Info.error_code == "" || Info.error_code == "1003") //1003 is no location
 	{
 		"Error: %(Info.error_code)\n%(Info.error_message)\n\n"
@@ -230,8 +207,6 @@ OnMenuExec : all
 		
 		if _metric; "Temperature: %(h)%(Weather.temp_c)°C%(d)\nFeels like: %(h)%(Weather.feelslike_c)°C%(d)\n"
 		else; "Temperature: %(h)%(Weather.temp_f)°F%(d)\nFeels like: %(h)%(Weather.feelslike_f)°F%(d)\n"
-		
-		//"Temperature: %(h)" + ("%(Weather.temp_f)°F%(d)\nFeels like: %(h)%(Weather.feelslike_f)°F","%(Weather.temp_c)°C%(d)\nFeels like: %(h)%(Weather.feelslike_c)°C")[_metric] + "%(d)\n"
 		
 		"Humidity: %(h)%(Weather.humidity)%%(d)\n"
 		
@@ -331,12 +306,6 @@ OnTest_httpc
 OnVarDisplay
 {
 	_list = GETVARLIST("Forecast")
-	// foreach _list; _item
-	// {
-		// ERASEVAR(_item)
-	// }
-	// GETVARLIST("Forecast")
-	
 	
 	_display = ""
 	foreach _list; _item
@@ -413,8 +382,6 @@ OnForecastMenu.Daily : all
 	"%(newline)\f[align,center]"
 	
 	(_MDY,_DMY)[_metric]
-	
-	//("Today","Tomorrow","%(nowday(2))")[_day]
 	
 	"%(newline)\f[align,right]"
 	
@@ -737,7 +704,6 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 	//Request info from the API
 	Info.error_code = ""
 	Info.error_message = ""
-	//_api = FUNCTIONEX("saori/httpc.dll","https://api.weatherapi.com/v1/current.xml?key=__API_KEY__&q=%(UserInfo.location_url)&aqi=yes")
 	_api = FUNCTIONEX("saori/httpc.dll","http://api.weatherapi.com/v1/forecast.xml?key=__API_KEY__&q=%(UserInfo.location_url)&aqi=yes&days=3&alerts=yes")
 	
 	//Update the last updated time
@@ -754,8 +720,6 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 		Info.error_code = TOSTR(ExtractXML(_api,"code"))
 		Info.error_message = ExtractXML(_api,"message")
 		ClearWeatherData
-		LOGGING(Info.error_code)
-		LOGGING(Info.error_message)
 		CheckForUpdates //If there's an error, check for an update because an update might fix it...
 	}
 	elseif _api == ""
@@ -763,8 +727,6 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 		Info.error_code = "99999"
 		Info.error_message = "No API response"
 		ClearWeatherData
-		LOGGING(Info.error_code)
-		LOGGING(Info.error_message)
 		CheckForUpdates //If there's an error, check for an update because an update might fix it...
 	}
 	else
@@ -772,7 +734,7 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 		//Extracting info from the XML file the API sent. ExtractXML here pulls out the data from between the XML tags so that we can get what we need. Starts by breaking it into big chunks, then looping through lists of tags and pulling out the info between each one.
 		//The EVAL tags here are mostly to help with the forecast days, where there are 72 arrays to deal with. Basically it can make variables on the fly, using the numbers for the day and hour to give them the proper names
 		
-		//================CURRENT WEATHER================
+		//================ CURRENT WEATHER ================
 		_current = ExtractXML(_api,"current")
 		
 		foreach CurrentWeatherTags; _tag
@@ -788,7 +750,7 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 		Weather.condition_icon = ExtractXML(_condition,"icon")
 		Weather.condition_code = ExtractXML(_condition,"code")
 		
-		//================FORECAST================
+		//================ FORECAST ================
 
 		_forecastdays = ExtractXML(_api,"forecastday")
 		
@@ -799,7 +761,7 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 			EVAL("Forecast.%(_i).Day.date = '%(ExtractXML(_forecastdays[_i],'date'))'")
 			EVAL("Forecast.%(_i).Day.date_epoch = '%(ExtractXML(_forecastdays[_i],'date_epoch'))'")
 			
-			//-----------Day-----------
+			//----------- Day -----------
 			_day = ExtractXML(_forecastdays[_i],"day")
 			
 			foreach ForecastDayTags; _tag
@@ -807,7 +769,7 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 				EVAL("Forecast.%(_i).Day.%(REPLACE(_tag,'-','_')) = '%(TOSTR(ExtractXML(_day,_tag)))'")
 			}
 			
-			//-----------Astro-----------
+			//----------- Astro -----------
 			
 			_astro = ExtractXML(_forecastdays[_i],"astro")
 			
@@ -816,7 +778,7 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 				EVAL("Forecast.%(_i).Astro.%(REPLACE(_tag,'-','_')) = '%(TOSTR(ExtractXML(_astro,_tag)))'")
 			}
 			
-			//-----------Hour-----------
+			//----------- Hour -----------
 			
 			_hours = ExtractXML(_forecastdays[_i],"hour")
 			
@@ -835,14 +797,12 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 			}
 		}
 		
-		//================ALERTS================
+		//================ ALERTS ================
 		
 		Weather.alerts = IARRAY
 		if "<alert>" _in_ _api
 		{
-			LOGGING("FOUND ALERT")
 			_alerts = ExtractXML(_api,"alert")
-			LOGGING(_alerts)
 			
 			foreach _alerts; _alert
 			{
@@ -876,8 +836,6 @@ OnWeatherStation.Weather
 	res_event = "OnWeatherStation.Weather" //Calls this event in the ghost if it exists
 	//res_marker = version //Send the little text on the bottom of the balloon that says it's from this plugin
 	
-	
-	
 	res_reference[0] = Weather.condition
 	res_reference[1] = Weather.condition_icon
 	res_reference[2] = Weather.condition_code
@@ -908,8 +866,6 @@ OnWeatherStation.Weather
 	res_reference[25] = Weather.pressure_mb
 	res_reference[26] = Weather.uv
 	
-	
-	
 	//Air quality
 	res_reference[27] = Weather.co
 	res_reference[28] = Weather.no2
@@ -919,9 +875,6 @@ OnWeatherStation.Weather
 	res_reference[32] = Weather.pm10
 	res_reference[33] = Weather.us_epa_index //_ not - here
 	res_reference[34] = Weather.gb_defra_index
-	
-	
-	
 	
 	res_reference[35] = Settings.units
 	res_reference[36] = Info.last_update[5]
@@ -939,8 +892,6 @@ OnWeatherStation.Astro
 	if Info.error_code != ""; {OnWeatherStation.Error; return}
 	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
 	
-	LOGGING("====================================================================")
-	LOGGING("SEND ASTRO %(reference[0])")
 	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
 	res_event = "OnWeatherStation.Astro"
 	
@@ -953,8 +904,6 @@ OnWeatherStation.Astro
 	_moonrise = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moonrise)%(CHR(34))")
 	_moonset = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moonset)%(CHR(34))")
 	
-	LOGGING("Sunrise: %(_sunrise)  Sunset: %(_sunset)  Moonrise: %(_moonrise)  Moonset: %(_moonset)")
-	
 	res_reference[1] = _sunrise
 	res_reference[2] = _sunset
 	res_reference[3] = _moonrise
@@ -965,20 +914,9 @@ OnWeatherStation.Astro
 	res_reference[7] = Twelve_to_24(_moonrise)
 	res_reference[8] = Twelve_to_24(_moonset)
 	
-	LOGGING("Sunrise: %(res_reference[5])  Sunset: %(res_reference[6])  Moonrise: %(res_reference[7])  Moonset: %(res_reference[8])")
-	
 	EVAL("res_reference[9] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moon_phase)%(CHR(34))")
 	res_reference[10] = PhaseNum
 	EVAL("res_reference[11] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moon_illumination)%(CHR(34))")
-	
-	// _ref = 1
-	// for _i = 0; _i < ARRAYSIZE(ForecastAstroTags); _i++
-	// {
-		// _tag = ForecastAstroTags[_i]
-		// EVAL("res_reference[%(_ref)] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.%(_tag))%(CHR(34))")
-		// _ref++
-	// }
-	// LOGGING(res_reference)
 }
 
 //For ghosts requesting the current daily forecast data
@@ -990,8 +928,6 @@ OnWeatherStation.Forecast.Day
 	
 	if !(reference[0] == "0" || reference[0] == "1" || reference[0] == "2"); reference[0] = "0" //If no valid day is specified, use today
 	
-	LOGGING("====================================================================")
-	LOGGING("SEND FORECAST DAY %(reference[0])")
 	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
 	res_event = "OnWeatherStation.Forecast.Day"
 	
@@ -1004,8 +940,6 @@ OnWeatherStation.Forecast.Day
 		EVAL("res_reference[%(_ref)] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Day.%(_tag))%(CHR(34))")
 		_ref++
 	}
-	LOGGING(GETVARLIST("res_"))
-	LOGGING(res_reference)
 }
 
 //For ghosts requesting the current hourly forecast data
@@ -1017,8 +951,6 @@ OnWeatherStation.Forecast.Hourly
 	
 	if !(reference[0] == "0" || reference[0] == "1" || reference[0] == "2"); reference[0] = "0" //If no valid day is specified, use today
 	
-	LOGGING("====================================================================")
-	LOGGING("SEND FORECAST HOURS %(reference[0])")
 	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
 	res_event = "OnWeatherStation.Forecast.Hourly"
 	
@@ -1039,9 +971,6 @@ OnWeatherStation.Alerts
 	if Info.error_code != ""; {OnWeatherStation.Error; return}
 	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
 	
-	
-	LOGGING("====================================================================")
-	LOGGING("SEND FORECAST HOURS %(reference[0])")
 	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
 	res_event = "OnWeatherStation.Alerts"
 	
@@ -1103,7 +1032,6 @@ OnWeatherLocation
 	_display = ""
 	_results = ExtractXML(_api,"geo")
 	
-	//if ARRAYSIZE(_results) <= 1 // ???? why did i set it up like this, this doesn't show results if there is only 1
 	if "geo" !_in_ _api
 	{
 		"\![quicksection,true]No results, please try again.\n\n"
@@ -1115,8 +1043,6 @@ OnWeatherLocation
 		//Loop through all the results and make a nice list
 		foreach _results; _location
 		{
-			LOGGING("LOCATION")
-			LOGGING(_location)
 			_name = ExtractXML(_location,"name") + ", " + ExtractXML(_location,"region") + ", " + ExtractXML(_location,"country")
 			_url = ExtractXML(_location,"url")
 			_lat = ExtractXML(_location,"lat")
