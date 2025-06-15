@@ -435,37 +435,11 @@ OnForecastMenu.Hourly : all
 	_metric = Settings.units == "Metric"
 	
 	//Setting all the variables beforehand this time since there are so dang many
-	_time = EVAL("Forecast.%(_day).Hour.%(_hour)[0]")
-	_is_day = EVAL("Forecast.%(_day).Hour.%(_hour)[1]")
-	_temp_f = EVAL("Forecast.%(_day).Hour.%(_hour)[2]")
-	_temp_c = EVAL("Forecast.%(_day).Hour.%(_hour)[3]")
-	_feelslike_f = EVAL("Forecast.%(_day).Hour.%(_hour)[4]")
-	_feelslike_c = EVAL("Forecast.%(_day).Hour.%(_hour)[5]")
-	_humidity = EVAL("Forecast.%(_day).Hour.%(_hour)[6]")
-	_wind_mph = EVAL("Forecast.%(_day).Hour.%(_hour)[7]")
-	_wind_kph = EVAL("Forecast.%(_day).Hour.%(_hour)[8]")
-	_dir = EVAL("Forecast.%(_day).Hour.%(_hour)[9]")
-	_degree = EVAL("Forecast.%(_day).Hour.%(_hour)[10]")
-	_gust_mph = EVAL("Forecast.%(_day).Hour.%(_hour)[11]")
-	_gust_kph = EVAL("Forecast.%(_day).Hour.%(_hour)[12]")
-	_precip_in = EVAL("Forecast.%(_day).Hour.%(_hour)[13]")
-	_precip_mm = EVAL("Forecast.%(_day).Hour.%(_hour)[14]")
-	_cloud = EVAL("Forecast.%(_day).Hour.%(_hour)[15]")
-	_will_it_rain = EVAL("Forecast.%(_day).Hour.%(_hour)[16]")
-	_will_it_snow = EVAL("Forecast.%(_day).Hour.%(_hour)[17]")
-	_chance_of_rain = EVAL("Forecast.%(_day).Hour.%(_hour)[18]")
-	_chance_of_snow = EVAL("Forecast.%(_day).Hour.%(_hour)[19]")
-	_vis_miles = EVAL("Forecast.%(_day).Hour.%(_hour)[20]")
-	_vis_km = EVAL("Forecast.%(_day).Hour.%(_hour)[21]")
-	_windchill_f = EVAL("Forecast.%(_day).Hour.%(_hour)[22]")
-	_windchill_c = EVAL("Forecast.%(_day).Hour.%(_hour)[23]")
-	_heatindex_f = EVAL("Forecast.%(_day).Hour.%(_hour)[24]")
-	_heatindex_c = EVAL("Forecast.%(_day).Hour.%(_hour)[25]")
-	_dewpoint_f = EVAL("Forecast.%(_day).Hour.%(_hour)[26]")
-	_dewpoint_c = EVAL("Forecast.%(_day).Hour.%(_hour)[27]")
-	_pressure_in = EVAL("Forecast.%(_day).Hour.%(_hour)[28]")
-	_pressure_mb = EVAL("Forecast.%(_day).Hour.%(_hour)[29]")
-	_uv = EVAL("Forecast.%(_day).Hour.%(_hour)[30]")
+	_i = 0
+	foreach ForecastHourTags; _tag
+	{
+		EVAL("_%(_tag) = Forecast.%(_day).Hour.%(_hour)[%(_i)]")
+	}
 	
 	//Making a nice time and date display
 	_YMD = _time[0," "]
@@ -503,7 +477,7 @@ OnForecastMenu.Hourly : all
 	"Temperature: %(h)"; (_temp_f + "°F",_temp_c + "°C")[_metric]; "%(d)\n"
 	"Feels like: %(h)"; (_feelslike_f + "°F",_feelslike_c + "°C")[_metric]; "%(d)\n"
 	"Humidity: %(h)%(_humidity)%%(d)\n"
-	"Wind speed: %(h)"; (_wind_mph + "mph",_wind_kph + " kph")[_metric]; "%(d), %(h)%(_dir)%(d) (%(h)%(_degree)°%(d))\n"
+	"Wind speed: %(h)"; (_wind_mph + "mph",_wind_kph + " kph")[_metric]; "%(d), %(h)%(_wind_dir)%(d) (%(h)%(_degree)°%(d))\n"
 	"Gusts: %(h)"; (_gust_mph + "mph",_gust_kph + " kph")[_metric]; "%(d)\n"
 	"Precipitation: %(h)"; (_precip_in + " inches",_precip_mm + " mm")[_metric]; "%(d)\n"
 	"Cloud cover: %(h)%(_cloud)%%(d)\n"
