@@ -162,7 +162,6 @@ OnMenuExec : all
 	_location = "(Not set)"
 	if UserInfo.location != ""; _location = UserInfo.location
 	
-	if !ISVAR("Settings.share_location"); Settings.share_location = "Off"
 	if !ISVAR("Settings.units"); Settings.units = "Imperial"
 	
 	_metric = Settings.units == "Metric"
@@ -315,8 +314,9 @@ OnSettingsMenu : all
 	"Location: \![*]\_a[OnChangeLocation]%(_location)\_a"
 
 	if _location != "(Not set)"; " \__q[OnExpungeLocationData](Remove)\__q"
-	"\n\nLet ghosts see location data: \![*]\_a[OnToggleLocationData]%(Settings.share_location)\_a\n"
-	"\nUnits: \![*]\_a[OnUnitsToggle]%(Settings.units)\_a\n"
+	"\n\n"
+	"Units: \![*]\_a[OnUnitsToggle]%(Settings.units)\_a"
+	"\n"
 	//"Update every \![*]\_a[OnWeatherInterval,%(Settings.weather_interval)]%(Settings.weather_interval)\_a  minutes\n"
 	"\n\n\![*]\q[Back,OnMenuExec]"
 }
@@ -363,13 +363,6 @@ OnUnitsToggle
 {
 	if Settings.units != "Imperial"; Settings.units = "Imperial"
 	else; Settings.units = "Metric"
-	OnSettingsMenu
-}
-
-OnToggleLocationData
-{
-	if Settings.share_location != "Off"; Settings.share_location = "Off"
-	else; Settings.share_location = "On"
 	OnSettingsMenu
 }
 
@@ -934,14 +927,6 @@ OnWeatherStation.Weather
 	res_reference[36] = Info.last_update[5]
 	res_reference[37] = version_num
 	//res_reference[36] = Settings.weather_interval //Currently not in use
-
-	if Settings.share_location == "On"
-	{
-		res_reference[38] = UserInfo.location
-		res_reference[39] = UserInfo.location_url
-		res_reference[40] = UserInfo.latitude
-		res_reference[41] = UserInfo.longitude
-	}
 }
 
 //For ghosts requesting the current astronomy data
