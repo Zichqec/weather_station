@@ -388,7 +388,11 @@ OnForecastMenu.Daily : all
 	_MDY = MDY(_YMD)
 	
 	"\0\b2\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
-	("\q[<<,OnPreviousForecastDay,%(_day)]","\f[color,disable]<<\f[color,default]")[_day <= 0]
+	switch _day <= 0
+	{
+		"\q[<<,OnPreviousForecastDay,%(_day)]"
+		"\f[color,disable]<<\f[color,default]"
+	}
 	
 	"%(newline)\f[align,center]"
 	
@@ -398,7 +402,11 @@ OnForecastMenu.Daily : all
 	
 	"%(newline)\f[align,right]"
 	
-	("\q[>>,OnNextForecastDay,%(_day)]","\f[color,disable]>>\f[color,default]")[_day >= MAXDAY]
+	switch _day >= MAXDAY
+	{
+		"\q[>>,OnNextForecastDay,%(_day)]"
+		"\f[color,disable]>>\f[color,default]"
+	}
 	
 	"\n \n\f[align,default]\f[anchorstyle,none]"
 	
