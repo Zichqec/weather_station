@@ -387,6 +387,12 @@ OnForecastMenu.Daily : all
 	_DMY = DMY(_YMD)
 	_MDY = MDY(_YMD)
 	
+	//TODO does this... does this work? are the brackets not a problem??
+	foreach ForecastDayTags; _tag
+	{
+		EVAL("_%(_tag) = Forecast.%(_day).Day.%(_tag)")
+	}
+	
 	"\0\b2\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
 	switch _day <= 0
 	{
@@ -410,17 +416,17 @@ OnForecastMenu.Daily : all
 	
 	"\n \n\f[align,default]\f[anchorstyle,none]"
 	
-	//These EVALS are using a sort of pseudo ternary operator, to try and make things a bit cleaner. Need EVAL here so that I don't have to write all those var names manually for each forecast day...
-	"Max temp: %(h)"; EVAL(("Forecast.%(_day).Day.maxtemp_f + '°F'","Forecast.%(_day).Day.maxtemp_c + '°C'")[_metric]); "%(d)\n"
-	"Min temp: %(h)"; EVAL(("Forecast.%(_day).Day.mintemp_f + '°F'","Forecast.%(_day).Day.mintemp_c + '°C'")[_metric]); "%(d)\n"
-	"Average temp: %(h)"; EVAL(("Forecast.%(_day).Day.avgtemp_f + '°F'","Forecast.%(_day).Day.avgtemp_c + '°C'")[_metric]); "%(d)\n"
-	"Average humidity: %(h)"; EVAL("Forecast.%(_day).Day.avghumidity") + "%"; "%(d)\n"
-	"Max wind speed: %(h)"; EVAL(("Forecast.%(_day).Day.maxwind_mph + 'mph'","Forecast.%(_day).Day.maxwind_kph + ' kph'")[_metric]); "%(d)\n"
+	//These are using a sort of pseudo ternary operator, to try and make things a bit cleaner
+	"Max temp: %(h)"; (_maxtemp_f + "°F",_maxtemp_c + "°C")[_metric]; "%(d)\n"
+	"Min temp: %(h)"; (_mintemp_f + "°F",_mintemp_c + "°C")[_metric]; "%(d)\n"
+	"Average temp: %(h)"; (_avgtemp_f + "°F",_avgtemp_c + "°C")[_metric]; "%(d)\n"
+	"Average humidity: %(h)"; _avghumidity + "%"; "%(d)\n"
+	"Max wind speed: %(h)"; (_maxwind_mph + " mph",_maxwind_kph + " kph")[_metric]; "%(d)\n"
 	"\n"
-	"Total precipitation: %(h)"; EVAL(("Forecast.%(_day).Day.totalprecip_in + ' inches'","Forecast.%(_day).Day.totalprecip_mm + ' mm'")[_metric]); "%(d)\n"
-	"Chance of rain: %(h)"; EVAL("Forecast.%(_day).Day.daily_chance_of_rain") + "%"; "%(d)\n"
-	"Chance of snow: %(h)"; EVAL("Forecast.%(_day).Day.daily_chance_of_snow") + "%"; "%(d)\n"
-	"Average Visibility: %(h)"; EVAL(("Forecast.%(_day).Day.avgvis_miles + ' miles'","Forecast.%(_day).Day.avgvis_km + ' km'")[_metric]); "%(d)\n"
+	"Total precipitation: %(h)"; (_totalprecip_in + " inches",_totalprecip_mm + " mm")[_metric]; "%(d)\n"
+	"Chance of rain: %(h)"; _daily_chance_of_rain + "%"; "%(d)\n"
+	"Chance of snow: %(h)"; _daily_chance_of_snow + "%"; "%(d)\n"
+	"Average Visibility: %(h)"; (_avgvis_miles + " miles",_avgvis_km + " km")[_metric]; "%(d)\n"
 	"\n"
 	
 	//Astronomy info display, handled below
