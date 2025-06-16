@@ -560,6 +560,7 @@ AstronomyDisplay : all
 	_time24 = Settings.time_format == "24"
 	_day = _argv[0]
 	
+	/*
 	_sunrise_12 = EVAL("Forecast.%(_day).Astro.sunrise")
 	_sunrise_24 = Twelve_to_24(_sunrise_12)
 	if _sunrise_12 == "No sunrise"; _sunrise_24 = _sunrise_12 //If there is no sunrise, make sure it says that for the metric version too | MIGHT BE ABLE TO GET RID OF THIS NOW, IDK AND I CAN'T TEST UNTIL THIS COMES AROUND AGAIN
@@ -597,7 +598,28 @@ AstronomyDisplay : all
 		if TOINT(_moonset_12[0,":"]) < 10; _moonset_12 = ERASE(_moonset_12,0,1)
 	}
 	"Moonset: %(h)"; (_moonset_12,_moonset_24)[_time24]; "%(d)\n\n"
+	*/
 	
+	_types = ("Sunrise","Sunset","Moonrise","Moonset") //earthrise...
+	foreach _types; _type
+	{
+		_lower = TOLOWER(_type)
+		EVAL("_%(_lower)_12 = Forecast.%(_day).Astro.%(_lower)")
+		EVAL("_%(_lower)_24 = Twelve_to_24(_%(_lower)_12)")
+		if EVAL("_%(_lower)_12 == ""No %(_lower)"""); EVAL("_%(_lower)_24 = _%(_lower)_12")
+		else
+		{
+			if EVAL("SUBSTR(_%(_lower)_12,0,1) == '0'"); EVAL("_%(_lower)_12 = ERASE(_%(_lower)_12,0,1)")
+		}
+		"%(_type): %(h)"; EVAL("(_%(_lower)_12),_%(_lower)_24)[_time24]"); "%(d)\n"
+	}
+	
+	"Sunrise: %(h)"; (_sunrise_12,_sunrise_24)[_time24]; "%(d)\n"
+	"Sunset: %(h)"; (_sunset_12,_sunset_24)[_time24]; "%(d)\n"
+	"\n"
+	"Moonrise: %(h)"; (_moonrise_12,_moonrise_24)[_time24]; "%(d)\n"
+	"Moonset: %(h)"; (_moonset_12,_moonset_24)[_time24]; "%(d)\n"
+	"\n"
 	"Moon phase: %(h)"; EVAL("Forecast.%(_day).Astro.moon_phase"); "%(d) \n"
 	"Illumination: %(h)"; EVAL("Forecast.%(_day).Astro.moon_illumination"); "%%(d)    \_b[img/moon_0%(PhaseNum(_day)),inline,--option=use_self_alpha]\n"
 }
