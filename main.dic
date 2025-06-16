@@ -160,6 +160,7 @@ OnMenuExec : all
 	
 	if Info.update_available; "\![*]\_a[OnWeatherStationUpdate]An update is available!\_a\n\n[half]"
 	
+	//"\q[Test SAORI,OnTest_httpc]"
 	//"\q[Testvar,OnTestThing]"
 	//"\n\q[Display All Vars,OnVarDisplay]\n\n"
 
@@ -293,7 +294,7 @@ OnSettingsMenu : all
 
 OnTest_httpc
 {
-	_api = FUNCTIONEX("saori/httpc.dll","https://api.weatherapi.com/v1/current.xml?key=__API_KEY__&q=%(UserInfo.location_url)")
+	_api = FUNCTIONEX("saori/httpc.dll") // ,"https://api.weatherapi.com/v1/current.xml?key=__API_KEY__&q=%(UserInfo.location_url)")
 	_api
 }
 
