@@ -235,3 +235,25 @@ Capitalize
 	
 	TOUPPER(_first) + _rest
 }
+
+//Converts a YYYY-MM-DD string to MDY (no leading 0s)
+MDY
+{
+	_date = SPLIT(_argv[0],"-")
+	_year = _date[0]
+	_month = TOINT(_date[1])
+	_day = TOINT(_date[2])
+	
+	"%(_month)-%(_day)-%(_year)"
+}
+
+//Converts a YYYY-MM-DD string to DMY (no leading 0s)
+DMY
+{
+	_date = SPLIT(_argv[0],"-")
+	_year = _date[0]
+	_month = TOINT(_date[1])
+	_day = TOINT(_date[2])
+	
+	"%(_day)-%(_month)-%(_year)"
+}

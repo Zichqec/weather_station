@@ -143,6 +143,8 @@ OnMenuExec : all
 	if UserInfo.location != ""; _location = UserInfo.location
 	
 	if !ISVAR("Settings.units"); Settings.units = "Imperial"
+	if !ISVAR("Settings.date_format"); Settings.date_format = "YYYY-MM-DD"
+	if !ISVAR("Settings.time_format"); Settings.time_format = "12"
 	
 	_metric = Settings.units == "Metric"
 
@@ -291,6 +293,10 @@ OnSettingsMenu : all
 	if _location != "(Not set)"; " \__q[OnExpungeLocationData](Remove)\__q"
 	"\n\n"
 	"Units: \![*]\_a[OnUnitsToggle]%(Settings.units)\_a"
+	"\n\n"
+	"Date format: \![*]\_a[OnDateFormatToggle]%(Settings.date_format)\_a"
+	"\n\n"
+	"Time format: \![*]\_a[OnTimeFormatToggle]%(Settings.time_format) hour\_a"
 	"\n"
 	//"Update every \![*]\_a[OnWeatherInterval,%(Settings.weather_interval)]%(Settings.weather_interval)\_a  minutes\n"
 	"\n\n\![*]\q[Back,OnMenuExec]"
@@ -330,8 +336,24 @@ OnExpungeLocationData
 
 OnUnitsToggle
 {
-	if Settings.units != "Imperial"; Settings.units = "Imperial"
-	else; Settings.units = "Metric"
+	if Settings.units != "Metric"; Settings.units = "Metric"
+	else; Settings.units = "Imperial"
+	OnSettingsMenu
+}
+
+OnDateFormatToggle
+{
+	//I'm not keeping leading 0s on anything but YYYY-MM-DD, but... for the sake of not having changing width.......
+	if Settings.date_format == "YYYY-MM-DD"; Settings.date_format = "MM-DD-YYYY"
+	elseif Settings.date_format == "MM-DD-YYYY"; Settings.date_format = "DD-MM-YYYY"
+	else; Settings.date_format = "YYYY-MM-DD"
+	OnSettingsMenu
+}
+
+OnTimeFormatToggle
+{
+	if Settings.time_format != "24"; Settings.time_format = "24"
+	else; Settings.time_format = "12"
 	OnSettingsMenu
 }
 
@@ -373,15 +395,17 @@ OnForecastMenu.Daily : all
 	//Making a nice date display
 	_YMD = EVAL("Forecast.%(_day).Day.date")
 	
-	_DMY = _YMD[2,"-"] + "-" + _YMD[1,"-"] + "-" + _YMD[0,"-"]
-	_MDY = TOINT(_YMD[1,"-"]) + "-" + _YMD[2,"-"] + "-" + _YMD[0,"-"] //Hoping the TOINT here removes any leading 0s lol
+	_DMY = DMY(_YMD)
+	_MDY = MDY(_YMD)
 	
 	"\0\b2\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
 	("\q[<<,OnPreviousForecastDay,%(_day)]","\f[color,disable]<<\f[color,default]")[_day <= 0]
 	
 	"%(newline)\f[align,center]"
 	
-	(_MDY,_DMY)[_metric]
+	if Settings.date_format == "MM-DD-YYYY"; _MDY
+	elseif Settings.date_format == "DD-MM-YYYY"; _DMY
+	else; _YMD
 	
 	"%(newline)\f[align,right]"
 	
@@ -445,25 +469,27 @@ OnForecastMenu.Hourly : all
 	_YMD = _time[0," "]
 	_24h = TOINT(_time[1," "][0,":"])
 	
-	_DMY = _YMD[2,"-"] + "-" + _YMD[1,"-"] + "-" + _YMD[0,"-"]
-	_MDY = TOINT(_YMD[1,"-"]) + "-" + _YMD[2,"-"] + "-" + _YMD[0,"-"] //Hoping the TOINT here removes any leading 0s lol
+	_DMY = DMY(_YMD)
+	_MDY = MDY(_YMD)
 	
 	_12h = ""
-	_ap = "a"
-	if _24h >= 12; {_12h = _24h - 12; _ap = "P"}
-	else; {_12h = _24h; _ap = "A"}
-	if _12h == 0; _12h = 12
-	_12h = TOSTR(_12h) + _ap + "M"
+	_ap = "AM"
+	if _24h >= 12; {_12h = _24h - 12; _ap = "PM"}
+	else; {_12h = _24h; _ap = "AM"}
 	
-	_date_imperial = "%(_MDY) %(_12h)"
-	_date_metric = "%(_DMY) %(_24h):00"
+	if _12h == 0; _12h = 12
 	
 	"\0\b2\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
 	("\q[<<,OnPreviousForecastHour,%(_day),%(_hour)]","\f[color,disable]<<\f[color,default]")[_hour <= 0 && _day <= 0]
 	
 	"%(newline)\f[align,center]"
 	
-	(_date_imperial,_date_metric)[_metric]
+	if Settings.date_format == "MM-DD-YYYY"; _MDY
+	elseif Settings.date_format == "DD-MM-YYYY"; _DMY
+	else; _YMD
+	
+	Settings.time_format == "24"; "%(_24h):00"
+	else; "%(_12h) %(_ap)"
 	
 	"%(newline)\f[align,right]"
 	
@@ -701,6 +727,9 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 		Info.error_code = "99999"
 		Info.error_message = "No API response"
 		ClearWeatherData
+		// _internetcheck = FUNCTIONEX("saori/httpc.dll")
+		// LOGGING("====================================================================")
+		// LOGGING("_internetcheck: %(_internetcheck)")
 		CheckForUpdates //If there's an error, check for an update because an update might fix it...
 	}
 	else
