@@ -480,7 +480,11 @@ OnForecastMenu.Hourly : all
 	if _12h == 0; _12h = 12
 	
 	"\0\b2\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
-	("\q[<<,OnPreviousForecastHour,%(_day),%(_hour)]","\f[color,disable]<<\f[color,default]")[_hour <= 0 && _day <= 0]
+	switch _hour <= 0 && _day <= 0
+	{
+		"\q[<<,OnPreviousForecastHour,%(_day),%(_hour)]"
+		"\f[color,disable]<<\f[color,default]"
+	}
 	
 	"%(newline)\f[align,center]"
 	
@@ -493,7 +497,11 @@ OnForecastMenu.Hourly : all
 	
 	"%(newline)\f[align,right]"
 	
-	("\q[>>,OnNextForecastHour,%(_day),%(_hour)]","\f[color,disable]>>\f[color,default]")[_hour >= 23 && _day >= MAXDAY]
+	switch _hour >= 23 && _day >= MAXDAY
+	{
+		"\q[>>,OnNextForecastHour,%(_day),%(_hour)]"
+		"\f[color,disable]>>\f[color,default]"
+	}
 	
 	"\n \n\f[align,default]\f[anchorstyle,none]"
 	
