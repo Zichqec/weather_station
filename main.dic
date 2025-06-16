@@ -492,7 +492,7 @@ OnForecastMenu.Hourly : all
 	elseif Settings.date_format == "DD-MM-YYYY"; _DMY
 	else; _YMD
 	
-	Settings.time_format == "24"; "%(_24h):00"
+	if Settings.time_format == "24"; "%(_24h):00"
 	else; "%(_12h) %(_ap)"
 	
 	"%(newline)\f[align,right]"
