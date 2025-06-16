@@ -420,7 +420,8 @@ OnForecastMenu.Daily : all
 	"Total precipitation: %(h)"; EVAL(("Forecast.%(_day).Day.totalprecip_in + ' inches'","Forecast.%(_day).Day.totalprecip_mm + ' mm'")[_metric]); "%(d)\n"
 	"Chance of rain: %(h)"; EVAL("Forecast.%(_day).Day.daily_chance_of_rain") + "%"; "%(d)\n"
 	"Chance of snow: %(h)"; EVAL("Forecast.%(_day).Day.daily_chance_of_snow") + "%"; "%(d)\n"
-	"Average Visibility: %(h)"; EVAL(("Forecast.%(_day).Day.avgvis_miles + ' miles'","Forecast.%(_day).Day.avgvis_km + ' km'")[_metric]); "%(d)\n\n"
+	"Average Visibility: %(h)"; EVAL(("Forecast.%(_day).Day.avgvis_miles + ' miles'","Forecast.%(_day).Day.avgvis_km + ' km'")[_metric]); "%(d)\n"
+	"\n"
 	
 	//Astronomy info display, handled below
 	AstronomyDisplay(_day)
