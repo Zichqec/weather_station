@@ -238,28 +238,13 @@ OnMenuExec : all
 		if _metric; "Pressure: %(h)%(Weather.pressure_mb) mb%(d)\n"
 		else; "Pressure: %(h)%(Weather.pressure_in) inches%(d)\n"
 		
-		//Air Quality Index
-		_aq_items = ("co","o3","no2","so2","pm2_5","pm10")
-		_co = ""
-		_o3 = ""
-		_no2 = ""
-		_so2 = ""
-		_pm2_5 = ""
-		_pm10 = ""
-		
-		//This is for making the numbers short because dear god they are so many digits long???????
-		foreach _aq_items; _item
-		{
-			void EVAL("_%(_item) = Weather.%(_item)")
-		}
-		
 		"\nAir quality:\n\n[half]"
-		"Carbon Monoxide: %(h)%(_co)%(d)\n"
-		"Ozone: %(h)%(_o3)%(d)\n"
-		"Nitrogen Dioxide: %(h)%(_no2)%(d)\n"
-		"Sulphur Dioxide: %(h)%(_so2)%(d)\n"
-		"PM2.5: %(h)%(_pm2_5)%(d)\n"
-		"PM10: %(h)%(_pm10)%(d)\n"
+		"Carbon Monoxide: %(h)%(Weather.co)%(d)\n"
+		"Ozone: %(h)%(Weather.o3)%(d)\n"
+		"Nitrogen Dioxide: %(h)%(Weather.no2)%(d)\n"
+		"Sulphur Dioxide: %(h)%(Weather.so2)%(d)\n"
+		"PM2.5: %(h)%(Weather.pm2_5)%(d)\n"
+		"PM10: %(h)%(Weather.pm10)%(d)\n"
 		"US EPA standard: %(h)%(Weather.us_epa_index)%(d)\n"
 		"UK Defra Index: %(h)%(Weather.gb_defra_index)%(d)\n"
 		//"Pollen: " //no pollen for now :( if someone knows of a good (free) pollen API please tell me!!
