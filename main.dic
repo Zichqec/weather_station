@@ -600,7 +600,7 @@ AstronomyDisplay : all
 	"Moonset: %(h)"; (_moonset_12,_moonset_24)[_time24]; "%(d)\n\n"
 	*/
 	
-	_types = ("Sunrise","Sunset","Moonrise","Moonset") //earthrise...
+	_types = ("Sunrise","Sunset","Moonrise","Moonset") //earthrise... ♫
 	foreach _types; _type
 	{
 		_lower = TOLOWER(_type)
@@ -785,7 +785,7 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 		foreach CurrentWeatherTags; _tag
 		{
 
-			EVAL("Weather.%(REPLACE(_tag,'-','_')) = '%(TOSTR(ExtractXML(_current,_tag)))'")
+			EVAL("Weather.%(REPLACE(_tag,'-','_')) = TOSTR(ExtractXML(_current,_tag))")
 		}
 		
 		//Doing condition separately since it has subcategories
@@ -804,14 +804,14 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 		{
 			//These two are on their own above the rest of the forecast data
 			EVAL("Forecast.%(_i).Day.date = '%(ExtractXML(_forecastdays[_i],'date'))'")
-			EVAL("Forecast.%(_i).Day.date_epoch = '%(ExtractXML(_forecastdays[_i],'date_epoch'))'")
+			EVAL("Forecast.%(_i).Day.date_epoch = ExtractXML(_forecastdays[_i],'date_epoch')")
 			
 			//----------- Day -----------
 			_day = ExtractXML(_forecastdays[_i],"day")
 			
 			foreach ForecastDayTags; _tag
 			{
-				EVAL("Forecast.%(_i).Day.%(REPLACE(_tag,'-','_')) = '%(TOSTR(ExtractXML(_day,_tag)))'")
+				EVAL("Forecast.%(_i).Day.%(REPLACE(_tag,'-','_')) = TOSTR(ExtractXML(_day,_tag))")
 			}
 			
 			//----------- Astro -----------
@@ -820,7 +820,7 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 			
 			foreach ForecastAstroTags; _tag
 			{
-				EVAL("Forecast.%(_i).Astro.%(REPLACE(_tag,'-','_')) = '%(TOSTR(ExtractXML(_astro,_tag)))'")
+				EVAL("Forecast.%(_i).Astro.%(REPLACE(_tag,'-','_')) = TOSTR(ExtractXML(_astro,_tag))")
 			}
 			
 			//----------- Hour -----------
@@ -835,7 +835,7 @@ OnGetCurrentWeather //Can apparently also run this without arguments to test if 
 				_temp = IARRAY
 				foreach ForecastHourTags; _tag
 				{
-					EVAL("_temp ,= '%(TOSTR(ExtractXML(_hour,_tag)))'")
+					EVAL("_temp ,= TOSTR(ExtractXML(_hour,_tag))")
 				}
 				EVAL("Forecast.%(_i).Hour.%(_ii) = '%(_temp)'")
 				_ii++
@@ -944,10 +944,10 @@ OnWeatherStation.Astro
 	
 	res_reference[0] = reference[0]
 	
-	_sunrise = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.sunrise)%(CHR(34))")
-	_sunset = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.sunset)%(CHR(34))")
-	_moonrise = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moonrise)%(CHR(34))")
-	_moonset = EVAL("%(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moonset)%(CHR(34))")
+	_sunrise = EVAL("Forecast.%(reference[0]).Astro.sunrise")
+	_sunset = EVAL("Forecast.%(reference[0]).Astro.sunset")
+	_moonrise = EVAL("Forecast.%(reference[0]).Astro.moonrise")
+	_moonset = EVAL("Forecast.%(reference[0]).Astro.moonset")
 	
 	res_reference[1] = _sunrise
 	res_reference[2] = _sunset
@@ -959,9 +959,9 @@ OnWeatherStation.Astro
 	res_reference[7] = Twelve_to_24(_moonrise)
 	res_reference[8] = Twelve_to_24(_moonset)
 	
-	EVAL("res_reference[9] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moon_phase)%(CHR(34))")
+	EVAL("res_reference[9] = Forecast.%(reference[0]).Astro.moon_phase")
 	res_reference[10] = PhaseNum
-	EVAL("res_reference[11] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Astro.moon_illumination)%(CHR(34))")
+	EVAL("res_reference[11] = Forecast.%(reference[0]).Astro.moon_illumination")
 }
 
 //For ghosts requesting the current daily forecast data
@@ -982,7 +982,7 @@ OnWeatherStation.Forecast.Day
 	for _i = 0; _i < ARRAYSIZE(ForecastDayTags); _i++
 	{
 		_tag = ForecastDayTags[_i]
-		EVAL("res_reference[%(_ref)] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Day.%(_tag))%(CHR(34))")
+		EVAL("res_reference[%(_ref)] = Forecast.%(reference[0]).Day.%(_tag)")
 		_ref++
 	}
 }
@@ -1002,7 +1002,7 @@ OnWeatherStation.Forecast.Hourly
 	_ref = 0
 	for _i = 0; _i < 24; _i++
 	{
-		EVAL("res_reference[%(_ref)] = %(CHR(34))%(CHR(37))(Forecast.%(reference[0]).Hour.%(_i))%(CHR(34))")
+		EVAL("res_reference[%(_ref)] = Forecast.%(reference[0]).Hour.%(_i)")
 		_ref++
 	}
 	
