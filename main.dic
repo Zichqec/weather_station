@@ -222,8 +222,8 @@ OnMenuExec : all
 		if _metric; "Gusts: %(h)%(Weather.gust_kph) kph%(d)\n"
 		else; "Gusts: %(h)%(Weather.gust_mph)mph%(d)\n"
 		
-		"Chance of rain: %(h)"; EVAL("Forecast.0.Day.daily_chance_of_rain") + "%"; "%(d)\n"
-		"Chance of snow: %(h)"; EVAL("Forecast.0.Day.daily_chance_of_snow") + "%"; "%(d)\n"
+		"Chance of rain: %(h)"; "%(Forecast.0.Day.daily_chance_of_rain)%"; "%(d)\n"
+		"Chance of snow: %(h)"; "%(Forecast.0.Day.daily_chance_of_snow)%"; "%(d)\n"
 		
 		if _metric; "Precipitation: %(h)%(Weather.precip_mm) mm%(d)\n"
 		else; "Precipitation: %(h)%(Weather.precip_in) inches%(d)\n"
