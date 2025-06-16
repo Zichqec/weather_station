@@ -70,6 +70,10 @@
 
 PluginLoad
 {
+	if !ISVAR("Settings.units"); Settings.units = "Imperial"
+	if !ISVAR("Settings.date_format"); Settings.date_format = "YYYY-MM-DD"
+	if !ISVAR("Settings.time_format"); Settings.time_format = "12"
+	
 	Info.update_available = 0
 	
 	Info.error_code = ""
