@@ -553,7 +553,7 @@ OnNextForecastHour
 //Display astronomy data. Astronomy data isn't sent with both 24hr and 12hr time, so have to do some conversions
 AstronomyDisplay : all
 {
-	_metric = Settings.units == "Metric"
+	_time24 = Settings.time_format == "24"
 	_day = _argv[0]
 	
 	_sunrise_12 = EVAL("Forecast.%(_day).Astro.sunrise")
@@ -565,7 +565,7 @@ AstronomyDisplay : all
 		
 		if TOINT(_sunrise_12[0,":"]) < 10; _sunrise_12 = ERASE(_sunrise_12,0,1) //If there is a leading 0, get rid of it
 	}
-	"Sunrise: %(h)"; (_sunrise_12,_sunrise_24)[_metric]; "%(d)\n"
+	"Sunrise: %(h)"; (_sunrise_12,_sunrise_24)[_time24]; "%(d)\n"
 	
 	_sunset_12 = EVAL("Forecast.%(_day).Astro.sunset")
 	_sunset_24 = Twelve_to_24(_sunset_12)
@@ -574,7 +574,7 @@ AstronomyDisplay : all
 	{
 		if TOINT(_sunset_12[0,":"]) < 10; _sunset_12 = ERASE(_sunset_12,0,1)
 	}
-	"Sunset: %(h)"; (_sunset_12,_sunset_24)[_metric]; "%(d)\n\n"
+	"Sunset: %(h)"; (_sunset_12,_sunset_24)[_time24]; "%(d)\n\n"
 	
 	_moonrise_12 = EVAL("Forecast.%(_day).Astro.moonrise")
 	_moonrise_24 = Twelve_to_24(_moonrise_12)
@@ -583,7 +583,7 @@ AstronomyDisplay : all
 	{
 		if TOINT(_moonrise_12[0,":"]) < 10; _moonrise_12 = ERASE(_moonrise_12,0,1)
 	}
-	"Moonrise: %(h)"; (_moonrise_12,_moonrise_24)[_metric]; "%(d)\n"
+	"Moonrise: %(h)"; (_moonrise_12,_moonrise_24)[_time24]; "%(d)\n"
 	
 	_moonset_12 = EVAL("Forecast.%(_day).Astro.moonset")
 	_moonset_24 = Twelve_to_24(_moonset_12)
@@ -592,7 +592,7 @@ AstronomyDisplay : all
 	{
 		if TOINT(_moonset_12[0,":"]) < 10; _moonset_12 = ERASE(_moonset_12,0,1)
 	}
-	"Moonset: %(h)"; (_moonset_12,_moonset_24)[_metric]; "%(d)\n\n"
+	"Moonset: %(h)"; (_moonset_12,_moonset_24)[_time24]; "%(d)\n\n"
 	
 	"Moon phase: %(h)"; EVAL("Forecast.%(_day).Astro.moon_phase"); "%(d) \n"
 	"Illumination: %(h)"; EVAL("Forecast.%(_day).Astro.moon_illumination"); "%%(d)    \_b[img/moon_0%(PhaseNum(_day)),inline,--option=use_self_alpha]\n"
