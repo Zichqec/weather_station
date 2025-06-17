@@ -517,19 +517,22 @@ OnForecastMenu.Hourly : all
 	foreach ForecastHourTags; _tag
 	{
 		EVAL("_%(_tag) = Forecast.%(_day).Hour.%(_hour)[%(_i)]")
+		_i++
 	}
 	
 	//Making a nice time and date display
 	_YMD = _time[0," "]
-	_24h = TOINT(_time[1," "][0,":"])
-	
 	_DMY = DMY(_YMD)
 	_MDY = MDY(_YMD)
 	
+	
 	_12h = ""
 	_ap = "AM"
-	if _24h >= 12; {_12h = _24h - 12; _ap = "PM"}
-	else; {_12h = _24h; _ap = "AM"}
+	_24h = _time[1," "][0,":"]
+	_24i = TOINT(_24h) //integer version - need to preserve that leading 0... it's easier this way i swear
+	
+	if _24i >= 12; {_12h = _24i - 12; _ap = "PM"}
+	else; {_12h = _24i; _ap = "AM"}
 	
 	if _12h == 0; _12h = 12
 	
@@ -545,7 +548,7 @@ OnForecastMenu.Hourly : all
 	if Settings.date_format == "MM-DD-YYYY"; _MDY
 	elseif Settings.date_format == "DD-MM-YYYY"; _DMY
 	else; _YMD
-	
+	"  "
 	if Settings.time_format == "24"; "%(_24h):00"
 	else; "%(_12h) %(_ap)"
 	
