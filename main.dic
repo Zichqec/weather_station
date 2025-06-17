@@ -389,6 +389,22 @@ OnForecastMenu.Daily : all
 	_MDY = MDY(_YMD)
 	
 	//TODO does this... does this work? are the brackets not a problem??
+	_maxtemp_f = ""
+	_maxtemp_c = ""
+	_mintemp_f = ""
+	_mintemp_c = ""
+	_avgtemp_f = ""
+	_avgtemp_c = ""
+	_avghumidity = ""
+	_maxwind_mph = ""
+	_maxwind_kph = ""
+	_totalprecip_in = ""
+	_totalprecip_mm = ""
+	_daily_will_it_rain = ""
+	_daily_chance_of_rain = ""
+	_daily_will_it_snow = ""
+	_daily_chance_of_snow = ""
+	_avgvis_miles = ""
 	foreach ForecastDayTags; _tag
 	{
 		EVAL("_%(_tag) = Forecast.%(_day).Day.%(_tag)")
@@ -464,6 +480,39 @@ OnForecastMenu.Hourly : all
 	_metric = Settings.units == "Metric"
 	
 	//Setting all the variables beforehand this time since there are so dang many - idk how i missed the scope issue here, i knew it would have one but i mistakenly thought i checked this menu and saw it working fine. but i could not have. oh well, will find a solution. TODO
+	
+	_time = ""
+	_is_day = ""
+	_temp_f = ""
+	_temp_c = ""
+	_feelslike_f = ""
+	_feelslike_c = ""
+	_humidity = ""
+	_wind_mph = ""
+	_wind_kph = ""
+	_wind_dir = ""
+	_wind_degree = ""
+	_gust_mph = ""
+	_gust_kph = ""
+	_precip_in = ""
+	_precip_mm = ""
+	_cloud = ""
+	_will_it_rain = ""
+	_chance_of_rain = ""
+	_will_it_snow = ""
+	_chance_of_snow = ""
+	_vis_miles = ""
+	_vis_km = ""
+	_windchill_f = ""
+	_windchill_c = ""
+	_heatindex_f = ""
+	_heatindex_c = ""
+	_dewpoint_f = ""
+	_dewpoint_c = ""
+	_pressure_in = ""
+	_pressure_mb = ""
+	_uv = ""
+	
 	_i = 0
 	foreach ForecastHourTags; _tag
 	{
@@ -561,6 +610,15 @@ AstronomyDisplay : all
 	_time24 = Settings.time_format == "24"
 	_day = _argv[0]
 	
+	_sunrise_12 = ""
+	_sunset_12 = ""
+	_moonrise_12 = ""
+	_moonset_12 = ""
+	_sunrise_24 = ""
+	_sunset_24 = ""
+	_moonrise_24 = ""
+	_moonset_24 = ""
+	
 	_types = ("Sunrise","Sunset","Moonrise","Moonset") //earthrise... ♫
 	foreach _types; _type
 	{
@@ -572,9 +630,14 @@ AstronomyDisplay : all
 		{
 			if EVAL("SUBSTR(_%(_lower)_12,0,1) == '0'"); EVAL("_%(_lower)_12 = ERASE(_%(_lower)_12,0,1)")
 		}
-		"%(_type): %(h)"; EVAL("(_%(_lower)_12,_%(_lower)_24)[_time24]"); "%(d)\n"
-		if "set" _in_ _type; "\n"
 	}
+	
+	"Sunrise: %(h)"; (_sunrise_12,_sunrise_24)[_time24]; "%(d)\n"
+	"Sunset: %(h)"; (_sunset_12,_sunset_24)[_time24]; "%(d)\n"
+	"\n"
+	"Moonrise: %(h)"; (_moonrise_12,_moonrise_24)[_time24]; "%(d)\n"
+	"Moonset: %(h)"; (_moonset_12,_moonset_24)[_time24]; "%(d)\n"
+	"\n"
 	
 	"Moon phase: %(h)"; EVAL("Forecast.%(_day).Astro.moon_phase"); "%(d) \n"
 	"Illumination: %(h)"; EVAL("Forecast.%(_day).Astro.moon_illumination"); "%%(d)    \_b[img/moon_0%(PhaseNum(_day)),inline,--option=use_self_alpha]\n"
