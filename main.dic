@@ -1085,31 +1085,36 @@ OnWeatherStation.Error
 }
 
 //Changing locations
-OnChangeLocation
+OnChangeLocation : all
 {
 	res_marker = version
 	"\![quicksection,true]\*\![open,inputbox,OnWeatherLocation,-1]\![no-autopause]"
-	--
-	"Write the name or latitude and longitude of your city to search for it. If in the US, you can use a zip code. If in the UK, you can use a postcode. If in Canada, you can use a postal code.\n\n\![*]\q[Back,OnSettingsMenu]\e"
+	
+	"Write the name or latitude and longitude of your city to search for it. If in the US, you can use a zip code. If in the UK, you can use a postcode. If in Canada, you can use a postal code."
+	
+	"\n\n"
+	"\![*]\q[Back,OnSettingsMenu]\e"
 }
 
 //Parse the location stuff sent back by the API, call OnChangeLocation again if there were no results
-OnWeatherLocation
+OnWeatherLocation : all
 {
 	res_marker = version
 	_api = FUNCTIONEX("saori/httpc.dll","https://api.weatherapi.com/v1/search.xml?key=__API_KEY__&q=%(reference[0])")
-	_display = ""
 	_results = ExtractXML(_api,"geo")
 	
 	"\*\_q\b[2]\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
+	
 	if "geo" !_in_ _api
 	{
 		"\![quicksection,true]No results, please try again.\n\n"
-		--
+		
 		OnChangeLocation
 	}
 	else
 	{
+		"\![*]\q[Back,OnSettingsMenu]\n\n"
+		
 		//Loop through all the results and make a nice list
 		foreach _results; _location
 		{
@@ -1122,16 +1127,11 @@ OnWeatherLocation
 
 			_nocomma = REPLACE(_name,",","|-|") //changed these to C_BYTE1, hope they didn't break | update yes they did break I think because something something auto type convert lol
 
-			_display += "\![*]\__q[OnWeatherLocationChosen,%(_url),%(_nocomma), %(_lat), %(_lon)]%(_name)\__q\n\n[half]" //There are spaces here to ensure these are transferred as strings and not ints
+			"\![*]\__q[OnWeatherLocationChosen,%(_url),%(_nocomma), %(_lat), %(_lon)]%(_name)\__q\n\n[half]" //There are spaces here to ensure these are transferred as strings and not ints
 		}
 		
-		"\*\_q\b2\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
-		--
-		"\![*]\q[Back,OnSettingsMenu]\n\n"
-		--
-		"%(_display)"
-		--
-		"\n\n\![*]\q[Back,OnSettingsMenu]\e"
+		"\n\n"
+		"\![*]\q[Back,OnSettingsMenu]"
 	}
 }
 
