@@ -698,6 +698,8 @@ OnAstronomyMenu : all
 
 //Weather alert display. Yes, I am aware that the descriptions have missing spaces for some reason. I can't figure out why that is. The API shows the spaces just fine online, but the result from the SAORI has the missing spaces before I even touch it.
 //I will also note that when I use the SAORI to request info from the API, categories without info have both a close and ending tag, like <severity></severity>, whereas in the online version it shows <severity/>. Weird.
+//UPDATE: figured this out! the API adds linebreaks when the lines get long enough. I can't deal with that with this SAORI since I can't save it as a file. I can't get the other SAORI working right now, might investigate later.
+//The API explorer DOES show the linebreaks, I think web browsers crush it into one line and add a space...
 OnWeatherAlertMenu : all
 {
 	_alert = reference[0]
