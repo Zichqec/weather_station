@@ -155,7 +155,7 @@ OnMenuExec : all
 	if !ISVAR("Settings.weather_interval"); Settings.weather_interval = 60
 
 	
-	"\0\b2\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]\![close,inputbox,OnWeatherLocation]"
+	"\0\b[2]\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]\![close,inputbox,OnWeatherLocation]"
 	"\f[align,center]%(emdash) Weather Station %(emdash)\n\n[half]\f[align,default]"
 	
 	if Info.update_available; "\![*]\_a[OnWeatherStationUpdate]An update is available!\_a\n\n[half]"
@@ -264,7 +264,7 @@ OnWeatherStationUpdate
 {
 	res_marker = version
 	
-	"\0\b2\_q\![set,autoscroll,disable]\![no-autopause]\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]Weather Station will attempt to update. Most ghosts do not have dialogue for plugin updates; please run the plugin again once the update is complete.\n\nYou can also update manually by opening the Ghost Explorer with %(h)Ctrl + E%(d), changing the %(h)Type%(d) tab to %(h)Plugin%(d), and right clicking on %(h)Weather Station%(d). The %(h)Network Update%(d) option will update the plugin.\n\nThe latest version of Weather Station can always be downloaded from \_a[https://ukagaka.zichqec.com/]Zichqec's website\_a.\n\nClick to continue...\x\![updateother,--plugin=Weather Station]Updating...\e"
+	"\0\b[2]\_q\![set,autoscroll,disable]\![no-autopause]\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]Weather Station will attempt to update. Most ghosts do not have dialogue for plugin updates; please run the plugin again once the update is complete.\n\nYou can also update manually by opening the Ghost Explorer with %(h)Ctrl + E%(d), changing the %(h)Type%(d) tab to %(h)Plugin%(d), and right clicking on %(h)Weather Station%(d). The %(h)Network Update%(d) option will update the plugin.\n\nThe latest version of Weather Station can always be downloaded from \_a[https://ukagaka.zichqec.com/]Zichqec's website\_a.\n\nClick to continue...\x\![updateother,--plugin=Weather Station]Updating...\e"
 }
 
 //Menu for location, units, and if you want to let ghosts see your location data
@@ -275,7 +275,7 @@ OnSettingsMenu : all
 	_location = "(Not set)"
 	if UserInfo.location != ""; _location = UserInfo.location
 	
-	"\0\*\_q\b2\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]\![close,inputbox,OnWeatherLocation]"
+	"\0\*\_q\b[2]\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]\![close,inputbox,OnWeatherLocation]"
 	"\f[align,center]%(emdash) Settings %(emdash)\n \f[align,default]\n"
 	//"Send: %(Info.Send_Weather_Now)\n"
 	"Location: \![*]\_a[OnChangeLocation]%(_location)\_a"
@@ -410,7 +410,7 @@ OnForecastMenu.Daily : all
 		EVAL("_%(_tag) = Forecast.%(_day).Day.%(_tag)")
 	}
 	
-	"\0\b2\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
+	"\0\b[2]\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
 	switch _day <= 0
 	{
 		"\q[<<,OnPreviousForecastDay,%(_day)]"
@@ -536,7 +536,7 @@ OnForecastMenu.Hourly : all
 	
 	if _12h == 0; _12h = 12
 	
-	"\0\b2\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
+	"\0\b[2]\_q\*\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
 	switch _hour <= 0 && _day <= 0
 	{
 		"\q[<<,OnPreviousForecastHour,%(_day),%(_hour)]"
@@ -690,7 +690,7 @@ OnAstronomyMenu : all
 {
 	res_marker = version
 	
-	"\0\b2\*\![set,autoscroll,disable]\![no-autopause]\_q\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]"
+	"\0\b[2]\*\![set,autoscroll,disable]\![no-autopause]\_q\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]"
 	"\f[align,center]%(emdash) Astronomy %(emdash)\n \f[align,default]\n"
 	AstronomyDisplay(0)
 	"\n\n\![*]\q[Back,OnMenuExec]"
@@ -704,7 +704,7 @@ OnWeatherAlertMenu : all
 	_info = SPLIT(Weather.alerts[_alert],C_BYTE1)
 	res_marker = version
 	
-	"\0\b2\*\![set,autoscroll,disable]\![no-autopause]\_q\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]"
+	"\0\b[2]\*\![set,autoscroll,disable]\![no-autopause]\_q\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]"
 	
 	switch _alert <= 0
 	{
@@ -1099,6 +1099,7 @@ OnWeatherLocation
 	_display = ""
 	_results = ExtractXML(_api,"geo")
 	
+	"\*\_q\b[2]\![set,autoscroll,disable]\![no-autopause]\f[anchorvisitedfontcolor,default.anchor]"
 	if "geo" !_in_ _api
 	{
 		"\![quicksection,true]No results, please try again.\n\n"
