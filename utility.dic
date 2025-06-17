@@ -1,3 +1,5 @@
+#globaldefine	C_BYTE1		CHR(0x1)
+
 emdash
 {
 	"\f[name,calibri]—\f[name,default]"
@@ -256,4 +258,63 @@ DMY
 	_day = TOINT(_date[2])
 	
 	"%(_day)-%(_month)-%(_year)"
+}
+
+//Convert 12hr to 24hr
+Twelve_to_24
+{
+	if "No" _in_ _argv[0]; {_argv[0]; return}
+	
+	_orig = _argv[0]
+	_hours = TOINT(_orig[0,":"])
+	_minutes = TOINT(_orig[1,":"][0," "])
+	_ap = TOUPPER(_orig[1," "])
+	
+	if _ap == "PM"
+	{
+		if _hours != 12; _hours += 12
+	}
+	if _hours < 10; _hours = "0" + TOSTR(_hours)
+	if _minutes < 10; _minutes = "0" + TOSTR(_minutes)
+	
+	"%(_hours):%(_minutes)"
+}
+
+//Convert 24hr to 12hr
+TwentyFour_to_12
+{
+	_orig = _argv[0]
+	_hours = TOINT(_orig[0,":"])
+	_minutes = TOINT(_orig[1,":"])
+	_ap = "AM"
+	
+	if _hours >= 12
+	{
+		_hours -= 12
+		_ap = "PM"
+	}
+	if _hours == 0; _hours = 12
+	if _minutes < 10; _minutes = "0" + TOSTR(_minutes)
+	
+	"%(_hours):%(_minutes) %(_ap)"
+}
+
+ClearWeatherData
+{
+	Info.Send_Weather_Now = 0
+	
+	_varlist = IARRAY
+	_varlist ,= GETVARLIST("Weather.")
+	_varlist ,= GETVARLIST("Forecast.")
+	
+	foreach _varlist; _var
+	{
+		ERASEVAR("%(_var)")
+	}
+}
+
+ClearErrors
+{
+	ERASEVAR("Info.error_code")
+	ERASEVAR("Info.error_message")
 }
