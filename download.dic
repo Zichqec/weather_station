@@ -105,7 +105,7 @@ OnGetCurrentWeather
 				_temp = IARRAY
 				foreach ForecastHourTags; _tag
 				{
-					_temp ,= TOSTR(ExtractXML(_hour,_tag)
+					_temp ,= TOSTR(ExtractXML(_hour,_tag))
 				}
 				EVAL("Forecast.%(_i).Hour.%(_ii) = _temp")
 				_ii++
