@@ -1,6 +1,7 @@
 /*
 
 This file handles downloading weather data from the API, parsing the XML tags, and saving everything to the appropriate variables.
+Even though weather data (other than the main data) is only sent out when requested, all of it is downloaded in one go.
 
 */
 
