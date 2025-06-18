@@ -193,7 +193,8 @@ OnWeatherStation.Error
 
 OnGhostBoot
 {
-	OnGetCurrentWeather
+	//OnGetCurrentWeather //TODO should it be running this for every ghost boot...? I think it should just give the existing data. I know that when the plugin starts, it runs this event once for every booted ghost... that could be the reason for lag spikes?
+	OnWeatherStation.Weather
 }
 
 OnSecondChange
