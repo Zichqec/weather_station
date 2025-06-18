@@ -23,8 +23,8 @@ OnGetCurrentWeather
 	Info.last_update[1] = nowhour
 	Info.last_update[2] = nowmin
 	Info.last_update[3] = nowsec
-	if ampm == 1; Info.last_update[4] = "pm"
-	else; Info.last_update[4] = "am"
+	if ampm == 1; Info.last_update[4] = "PM"
+	else; Info.last_update[4] = "AM"
 	Info.last_update[5] = GETSECCOUNT
 	
 	if "<error>" _in_ _api //If there's an error, let the user know and clear the weather info

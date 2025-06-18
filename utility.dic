@@ -56,6 +56,12 @@ nowhour
 	else; hour12
 }
 
+displayhour24 : all
+{
+	if _argv[0] < 10; "0"
+	TOSTR(_argv[0])
+}
+
 //Add a 0 to the minute if it's under 10
 nowmin
 {

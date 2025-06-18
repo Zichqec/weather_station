@@ -110,11 +110,13 @@ OnMenuExec : all
 	//Last updated display
 	if HasWeatherData || Info.error_code != ""
 	{
-		"\nLast updated \f[anchorstyle,none]%(h)"
-		if _metric; "%(Info.last_update[0])"
+		"\nLast updated: \f[anchorstyle,none]%(h)"
+		if Settings.time_format == "24"; "%(displayhour24(Info.last_update[0]))"
 		else; "%(Info.last_update[1])"
+		
 		":%(Info.last_update[2]) "
-		if !_metric; "%(Info.last_update[4])" //am/pm
+		
+		if Settings.time_format == "12"; "%(Info.last_update[4])" //am/pm
 	}
 	"%(d)\f[anchorstyle,default]\n[half]"
 	"\n\![*]\__q[OnSettingsMenu]Settings\__q"
@@ -440,7 +442,7 @@ OnForecastMenu.Hourly : all
 	
 	
 	_12h = ""
-	_ap = "AM"
+	_ap = ""
 	_24h = _time[1," "][0,":"]
 	_24i = TOINT(_24h) //integer version - need to preserve that leading 0... it's easier this way i swear
 	
