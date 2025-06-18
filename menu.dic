@@ -642,7 +642,7 @@ OnNextAlert
 OnChangeLocation : all
 {
 	res_marker = version
-	"\![quicksection,true]\*\![open,inputbox,OnWeatherLocation,-1]\![no-autopause]"
+	"\0\b[2]\![quicksection,true]\*\![open,inputbox,OnWeatherLocation,-1]\![no-autopause]\![set,autoscroll,disable]"
 	
 	"Write the name or latitude and longitude of your city to search for it. If in the US, you can use a zip code. If in the UK, you can use a postcode. If in Canada, you can use a postal code."
 	
@@ -679,7 +679,7 @@ OnWeatherLocation : all
 
 			if _name == "" || _url == ""; continue
 
-			_nocomma = REPLACE(_name,",","|-|") //changed these to C_BYTE1, hope they didn't break | update yes they did break I think because something something auto type convert lol
+			_nocomma = REPLACE(_name,",","|-|") //changed these to C_BYTE1, hope they didn't break | update yes they did break I think because something something auto data convert lol
 
 			"\![*]\__q[OnWeatherLocationChosen,%(_url),%(_nocomma), %(_lat), %(_lon)]%(_name)\__q\n\n[half]" //There are spaces here to ensure these are transferred as strings and not ints
 		}
