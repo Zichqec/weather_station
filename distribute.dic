@@ -140,7 +140,7 @@ OnWeatherStation.Forecast.Hourly
 	_ref = 0
 	for _i = 0; _i < 24; _i++
 	{
-		EVAL("res_reference[%(_ref)] = Forecast.%(reference[0]).Hour.%(_i)")
+		EVAL("res_reference[%(_ref)] = TOSTR(Forecast.%(reference[0]).Hour.%(_i))")
 		_ref++
 	}
 	
@@ -160,7 +160,7 @@ OnWeatherStation.Alerts
 	
 	for _i = 0; _i < ARRAYSIZE(Weather.alerts); _i++
 	{
-		EVAL("res_reference[%(_i)] = Weather.alerts[%(_i)]")
+		EVAL("res_reference[%(_i)] = TOSTR(Weather.alerts[%(_i)])")
 	}
 }
 
