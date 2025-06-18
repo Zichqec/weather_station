@@ -5,6 +5,20 @@ I've attempted to arrange it into a rough categorization, but it's a bit messy.
 
 */
 
+//—————————— Version number ——————————
+version
+{
+	"Weather Station v%(version_num)"
+}
+
+version_num
+{
+	"1.0.5"
+}
+
+
+//—————————— Text/tag shortcuts ——————————
+
 #globaldefine	C_BYTE1		CHR(0x1)
 
 emdash
@@ -12,6 +26,29 @@ emdash
 	"\f[name,calibri]—\f[name,default]"
 }
 
+//This helps with alignment tags, so you can put left, center, and right aligned text all on the same line
+newline
+{
+	"\n \_l[0]\n[-100]"
+}
+
+h
+{
+	"\f[color,default.anchor]"
+}
+
+d
+{
+	"\f[color,default]"
+}
+
+g
+{
+	"\f[color,disable]"
+}
+
+
+//—————————— Display helpers ——————————
 //Fixing the 12 hour display
 nowhour
 {
@@ -33,12 +70,32 @@ nowsec
 	else; "%(second)"
 }
 
-//This helps with alignment tags, so you can put left, center, and right aligned text all on the same line
-newline
+PhaseNum
 {
-	"\n \_l[0]\n[-100]"
+	_day = 0; if _argv[0] != ""; _day = _argv[0]
+	_phase = EVAL("Forecast.%(_day).Astro.moon_phase")
+	
+	if _phase == "New Moon"; 0
+	elseif _phase == "Waxing Crescent"; 1
+	elseif _phase == "First Quarter"; 2
+	elseif _phase == "Waxing Gibbous"; 3
+	elseif _phase == "Full Moon"; 4
+	elseif _phase == "Waning Gibbous"; 5
+	elseif _phase == "Last Quarter"; 6
+	elseif _phase == "Waning Crescent"; 7
+	else; -1
 }
 
+MoonIcon
+{
+	_phase = PhaseNum
+	if _phase == -1; _phase = 8
+	
+	"\_b[img/moon_0%(_phase),inline,--option=use_self_alpha]"
+}
+
+
+//—————————— Quick checks ——————————
 CanGetWeather
 {
 	if UserInfo.location != ""; 1
@@ -52,33 +109,117 @@ HasWeatherData
 	else; 0
 }
 
-version
+
+//—————————— Variable setters ——————————
+ClearWeatherData
 {
-	"Weather Station v%(version_num)"
+	Info.Send_Weather_Now = 0
+	
+	_varlist = IARRAY
+	_varlist ,= GETVARLIST("Weather.")
+	_varlist ,= GETVARLIST("Forecast.")
+	
+	foreach _varlist; _var
+	{
+		ERASEVAR("%(_var)")
+	}
 }
 
-//Don't forget to update this, me!
-version_num
+ClearErrors
 {
-	"1.0.5"
+	ERASEVAR("Info.error_code")
+	ERASEVAR("Info.error_message")
 }
 
-h
+
+//—————————— Pure functions / conversions ——————————
+//Pulls out data from between XML tags
+ExtractXML
 {
-	"\f[color,default.anchor]"
+	_output = IARRAY
+	_split = SPLIT(_argv[0],"<%(_argv[1])>") //Split by the starting tag
+	_split[0] = IARRAY //Remove the first element because we don't need it
+	foreach _split; _element //For each starting tag found, split off everything after the ending tag
+	{
+		_output ,= SPLIT(_element,"</%(_argv[1])>")[0] //Add contents to an array
+	}
+	_output
 }
 
-d
+//Capitalizes the first letter of words/word groups you send to it
+Capitalize
 {
-	"\f[color,default]"
+	_first = SUBSTR(_argv[0],0,1)
+	_rest = ERASE(_argv[0],0,1)
+	
+	TOUPPER(_first) + _rest
 }
 
-g
+//Converts a YYYY-MM-DD string to MDY (no leading 0s)
+MDY
 {
-	"\f[color,disable]"
+	_date = SPLIT(_argv[0],"-")
+	_year = _date[0]
+	_month = TOINT(_date[1])
+	_day = TOINT(_date[2])
+	
+	"%(_month)-%(_day)-%(_year)"
 }
 
+//Converts a YYYY-MM-DD string to DMY (no leading 0s)
+DMY
+{
+	_date = SPLIT(_argv[0],"-")
+	_year = _date[0]
+	_month = TOINT(_date[1])
+	_day = TOINT(_date[2])
+	
+	"%(_day)-%(_month)-%(_year)"
+}
+
+//Convert 12hr to 24hr
+Twelve_to_24
+{
+	if "No" _in_ _argv[0]; {_argv[0]; return}
+	
+	_orig = _argv[0]
+	_hours = TOINT(_orig[0,":"])
+	_minutes = TOINT(_orig[1,":"][0," "])
+	_ap = TOUPPER(_orig[1," "])
+	
+	if _ap == "PM"
+	{
+		if _hours != 12; _hours += 12
+	}
+	if _hours < 10; _hours = "0" + TOSTR(_hours)
+	if _minutes < 10; _minutes = "0" + TOSTR(_minutes)
+	
+	"%(_hours):%(_minutes)"
+}
+
+//Convert 24hr to 12hr
+TwentyFour_to_12
+{
+	_orig = _argv[0]
+	_hours = TOINT(_orig[0,":"])
+	_minutes = TOINT(_orig[1,":"])
+	_ap = "AM"
+	
+	if _hours >= 12
+	{
+		_hours -= 12
+		_ap = "PM"
+	}
+	if _hours == 0; _hours = 12
+	if _minutes < 10; _minutes = "0" + TOSTR(_minutes)
+	
+	"%(_hours):%(_minutes) %(_ap)"
+}
+
+
+//—————————— API category lists ——————————
 //These are all the categories that the API sends over. I think I may have slightly rearranged the order to something that made more sense to me. They are separated into different groups, based on the groups the API sends over.
+
 //Current weather info
 CurrentWeatherTags : array
 {
@@ -196,132 +337,4 @@ AlertTags : array
 	"expires"
 	"desc"
 	"instruction"
-}
-
-PhaseNum
-{
-	_day = 0; if _argv[0] != ""; _day = _argv[0]
-	_phase = EVAL("Forecast.%(_day).Astro.moon_phase")
-	
-	if _phase == "New Moon"; 0
-	elseif _phase == "Waxing Crescent"; 1
-	elseif _phase == "First Quarter"; 2
-	elseif _phase == "Waxing Gibbous"; 3
-	elseif _phase == "Full Moon"; 4
-	elseif _phase == "Waning Gibbous"; 5
-	elseif _phase == "Last Quarter"; 6
-	elseif _phase == "Waning Crescent"; 7
-	else; -1
-}
-
-MoonIcon
-{
-	_phase = PhaseNum
-	if _phase == -1; _phase = 8
-	
-	"\_b[img/moon_0%(_phase),inline,--option=use_self_alpha]"
-}
-
-
-//Pulls out data from between XML tags
-ExtractXML
-{
-	_output = IARRAY
-	_split = SPLIT(_argv[0],"<%(_argv[1])>") //Split by the starting tag
-	_split[0] = IARRAY //Remove the first element because we don't need it
-	foreach _split; _element //For each starting tag found, split off everything after the ending tag
-	{
-		_output ,= SPLIT(_element,"</%(_argv[1])>")[0] //Add contents to an array
-	}
-	_output
-}
-
-//Capitalizes the first letter of words/word groups you send to it
-Capitalize
-{
-	_first = SUBSTR(_argv[0],0,1)
-	_rest = ERASE(_argv[0],0,1)
-	
-	TOUPPER(_first) + _rest
-}
-
-//Converts a YYYY-MM-DD string to MDY (no leading 0s)
-MDY
-{
-	_date = SPLIT(_argv[0],"-")
-	_year = _date[0]
-	_month = TOINT(_date[1])
-	_day = TOINT(_date[2])
-	
-	"%(_month)-%(_day)-%(_year)"
-}
-
-//Converts a YYYY-MM-DD string to DMY (no leading 0s)
-DMY
-{
-	_date = SPLIT(_argv[0],"-")
-	_year = _date[0]
-	_month = TOINT(_date[1])
-	_day = TOINT(_date[2])
-	
-	"%(_day)-%(_month)-%(_year)"
-}
-
-//Convert 12hr to 24hr
-Twelve_to_24
-{
-	if "No" _in_ _argv[0]; {_argv[0]; return}
-	
-	_orig = _argv[0]
-	_hours = TOINT(_orig[0,":"])
-	_minutes = TOINT(_orig[1,":"][0," "])
-	_ap = TOUPPER(_orig[1," "])
-	
-	if _ap == "PM"
-	{
-		if _hours != 12; _hours += 12
-	}
-	if _hours < 10; _hours = "0" + TOSTR(_hours)
-	if _minutes < 10; _minutes = "0" + TOSTR(_minutes)
-	
-	"%(_hours):%(_minutes)"
-}
-
-//Convert 24hr to 12hr
-TwentyFour_to_12
-{
-	_orig = _argv[0]
-	_hours = TOINT(_orig[0,":"])
-	_minutes = TOINT(_orig[1,":"])
-	_ap = "AM"
-	
-	if _hours >= 12
-	{
-		_hours -= 12
-		_ap = "PM"
-	}
-	if _hours == 0; _hours = 12
-	if _minutes < 10; _minutes = "0" + TOSTR(_minutes)
-	
-	"%(_hours):%(_minutes) %(_ap)"
-}
-
-ClearWeatherData
-{
-	Info.Send_Weather_Now = 0
-	
-	_varlist = IARRAY
-	_varlist ,= GETVARLIST("Weather.")
-	_varlist ,= GETVARLIST("Forecast.")
-	
-	foreach _varlist; _var
-	{
-		ERASEVAR("%(_var)")
-	}
-}
-
-ClearErrors
-{
-	ERASEVAR("Info.error_code")
-	ERASEVAR("Info.error_message")
 }
