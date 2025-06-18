@@ -178,14 +178,14 @@ OnMenuExec : all
 	
 	"\n\![*]\q[Close,OnCancel]\n\n"
 	
-	"\f[height,-2]\f[anchorstyle,default]\![*]Powered by \_a[https://www.weatherapi.com/]WeatherAPI.com\_a\e"
+	"\f[height,-2]\f[anchorstyle,default]\![*]Powered by \_a[https://www.weatherapi.com/]WeatherAPI.com\_a"
 }
 
 OnWeatherStationUpdate
 {
 	res_marker = version
 	
-	"\0\b[2]\_q\![set,autoscroll,disable]\![no-autopause]\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]Weather Station will attempt to update. Most ghosts do not have dialogue for plugin updates; please run the plugin again once the update is complete.\n\nYou can also update manually by opening the Ghost Explorer with %(h)Ctrl + E%(d), changing the %(h)Type%(d) tab to %(h)Plugin%(d), and right clicking on %(h)Weather Station%(d). The %(h)Network Update%(d) option will update the plugin.\n\nThe latest version of Weather Station can always be downloaded from \_a[https://ukagaka.zichqec.com/]Zichqec's website\_a.\n\nClick to continue...\x\![updateother,--plugin=Weather Station]Updating...\e"
+	"\0\b[2]\_q\![set,autoscroll,disable]\![no-autopause]\f[anchorstyle,none]\f[anchorvisitedfontcolor,default.anchor]Weather Station will attempt to update. Most ghosts do not have dialogue for plugin updates; please run the plugin again once the update is complete.\n\nYou can also update manually by opening the Ghost Explorer with %(h)Ctrl + E%(d), changing the %(h)Type%(d) tab to %(h)Plugin%(d), and right clicking on %(h)Weather Station%(d). The %(h)Network Update%(d) option will update the plugin.\n\nThe latest version of Weather Station can always be downloaded from \_a[https://ukagaka.zichqec.com/]Zichqec's website\_a.\n\nClick to continue...\x\![updateother,--plugin=Weather Station]Updating..."
 }
 
 //Menu for location, units, and if you want to let ghosts see your location data
@@ -478,7 +478,6 @@ OnForecastMenu.Hourly : all
 	
 	"\n \n\f[align,default]\f[anchorstyle,none]"
 	
-	
 	("Nighttime","Daytime")[TOINT(_is_day)]
 	"\n"
 	"Temperature: %(h)"; (_temp_f + "°F",_temp_c + "°C")[_metric]; "%(d)\n"
@@ -647,7 +646,7 @@ OnChangeLocation : all
 	"Write the name or latitude and longitude of your city to search for it. If in the US, you can use a zip code. If in the UK, you can use a postcode. If in Canada, you can use a postal code."
 	
 	"\n\n"
-	"\![*]\q[Back,OnSettingsMenu]\e"
+	"\![*]\q[Back,OnSettingsMenu]"
 }
 
 //Parse the location stuff sent back by the API, call OnChangeLocation again if there were no results
