@@ -18,6 +18,6 @@ The code in the .dic files may be copied and adapted with attribution. See my no
 The plugin may receive updates over time, so if you bundle it with a ghost be aware that it may become out of date.
 
 
-Weather Station v1.0.5
+Weather Station v1.1.0
 Made by Zichqec https://ukagaka.zichqec.com/
 Using Weather API https://www.weatherapi.com/
