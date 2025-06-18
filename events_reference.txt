@@ -42,10 +42,10 @@ reference34: UK Defra Index. See weatherapi.com's documentation for the table of
 reference35: The user's choice of units (Imperial or Metric).
 reference36: The time the plugin last updated the weather data, in seconds since EPOCH (1970/1/1 00:00:00).
 reference37: The current version number of the plugin.
-reference38: The user's location name. Only available if the user has chosen to share their location data.
-reference39: The url for the user's location, to be used with the API. Only available if the user has chosen to share their location data.
-reference40: The user's latitude. Only available if the user has chosen to share their location data.
-reference41: The user's longitude. Only available if the user has chosen to share their location data.
+reference38: <Deprecated>
+reference39: <Deprecated>
+reference40: <Deprecated>
+reference41: <Deprecated>
 
 
 —————————— OnWeatherStation.Astro ——————————
