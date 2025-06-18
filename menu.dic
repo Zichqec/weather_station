@@ -320,6 +320,7 @@ OnForecastMenu.Daily : all
 	_daily_will_it_snow = ""
 	_daily_chance_of_snow = ""
 	_avgvis_miles = ""
+	_avgvis_km = ""
 	foreach ForecastDayTags; _tag
 	{
 		EVAL("_%(_tag) = Forecast.%(_day).Day.%(_tag)")

@@ -278,6 +278,7 @@ ForecastDayTags : array
 	"daily_will_it_snow"
 	"daily_chance_of_snow"
 	"avgvis_miles"
+	"avgvis_km"
 }
 
 //Astronomy forecast tags
