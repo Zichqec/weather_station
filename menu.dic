@@ -366,8 +366,8 @@ OnForecastMenu.Daily : all
 	AstronomyDisplay(_day)
 	
 	
-	"\n\n\![*]\q[Hourly forecast,OnForecastMenu.Hourly,%(reference[0])]"
-	"\n\![*]\q[Back,OnMenuExec]\e"
+	"\n\n\![*]\__q[OnForecastMenu.Hourly,%(reference[0])]Hourly forecast\__q"
+	"\n\![*]\q[Back,OnMenuExec]"
 }
 
 OnPreviousForecastDay
@@ -497,8 +497,8 @@ OnForecastMenu.Hourly : all
 	"Pressure: %(h)"; (_pressure_in + " inches",_pressure_mb + " mb")[_metric]; "%(d)\n"
 	"UV Index: %(h)%(_uv)%(d)\n"
 	
-	"\n\n\![*]\q[Daily forecast,OnForecastMenu.Daily,%(reference[0])]"
-	"\n\![*]\q[Back,OnMenuExec]\e"
+	"\n\n\![*]\__q[OnForecastMenu.Daily,%(reference[0])]Daily forecast\__q"
+	"\n\![*]\q[Back,OnMenuExec]"
 }
 
 OnPreviousForecastHour
