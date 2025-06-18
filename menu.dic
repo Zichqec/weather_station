@@ -484,7 +484,7 @@ OnForecastMenu.Hourly : all
 	"Temperature: %(h)"; (_temp_f + "°F",_temp_c + "°C")[_metric]; "%(d)\n"
 	"Feels like: %(h)"; (_feelslike_f + "°F",_feelslike_c + "°C")[_metric]; "%(d)\n"
 	"Humidity: %(h)%(_humidity)%%(d)\n"
-	"Wind speed: %(h)"; (_wind_mph + "mph",_wind_kph + " kph")[_metric]; "%(d), %(h)%(_wind_dir)%(d) (%(h)%(_degree)°%(d))\n"
+	"Wind speed: %(h)"; (_wind_mph + "mph",_wind_kph + " kph")[_metric]; "%(d), %(h)%(_wind_dir)%(d) (%(h)%(_wind_degree)°%(d))\n"
 	"Gusts: %(h)"; (_gust_mph + "mph",_gust_kph + " kph")[_metric]; "%(d)\n"
 	"Precipitation: %(h)"; (_precip_in + " inches",_precip_mm + " mm")[_metric]; "%(d)\n"
 	"Cloud cover: %(h)%(_cloud)%%(d)\n"
