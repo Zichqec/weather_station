@@ -1,3 +1,12 @@
+/*
+
+This file contains all of the menus for the plugin, including the settings and basic weather data displays.
+It also contains PluginLoad and PluginUnload since it feels a bit silly to create a separate boot file for just those two functions.
+
+*/
+
+
+//Comments translated from YAYA as Plugin (probably with Google Translate), kept here for reference:
 // **** usage ****
 //
 // The function name is the same as the event name; there is no On_ prefix when getting a string, as in the SHIORI/3.0 template.

@@ -1,3 +1,10 @@
+/*
+
+This file contains various utility functions, including shortcuts for writing certain tags, functions to make nicer time displays, and pure functions for various conversions.
+I've attempted to arrange it into a rough categorization, but it's a bit messy.
+
+*/
+
 #globaldefine	C_BYTE1		CHR(0x1)
 
 emdash

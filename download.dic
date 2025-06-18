@@ -1,4 +1,12 @@
-OnGetCurrentWeather //Can apparently also run this without arguments to test if an internet connection is available. Very useful! ...If I'm moving my website, I need to keep this in mind... | I think this note was for the httpc saori...
+/*
+
+This file handles downloading weather data from the API, parsing the XML tags, and saving everything to the appropriate variables.
+
+*/
+
+//Can apparently also run this without arguments to test if an internet connection is available. Very useful! ...If I'm moving my website, I need to keep this in mind... | I think this note was for the httpc saori...
+//Update: while that is a functionality of the SAORI, it doesn't appear to work properly for me... it just always outputs a 1
+OnGetCurrentWeather
 {
 	_location = "(Not set)"
 	if UserInfo.location != ""; _location = UserInfo.location

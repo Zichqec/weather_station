@@ -1,3 +1,9 @@
+/*
+
+This file handles distributing the weather data to ghosts. All of the events that are documented in event_reference.txt / Ukadoc are handled here.
+
+*/
+
 //For ghosts to request the current weather if they don't have it for some reason
 OnWeatherStation.Weather
 {
@@ -28,6 +34,7 @@ OnWeatherStation.Weather
 	res_reference[15] = Weather.precip_in
 	res_reference[16] = Weather.precip_mm
 	res_reference[17] = Weather.cloud
+	
 	//Yes, these are the same as you can get from the forecast, but I figure this will be easier for people
 	res_reference[18] = Forecast.0.Day.daily_will_it_rain
 	res_reference[19] = Forecast.0.Day.daily_chance_of_rain
