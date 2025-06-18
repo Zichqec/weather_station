@@ -11,9 +11,11 @@ https://ukagakadreamteam.com/wiki/plugin/weather_station
 
 You may distribute an UNMODIFIED version of this plugin bundled with a ghost.
 Redistribution other than this is prohibited.
-Modification is prohibited.
+Modification of the plugin is prohibited.
+The code in the .dic files may be copied and adapted with attribution. See my notes in key.dic for details.
+	(yaya_plugin2.dic is an exception to this since it comes with YAYA as Plugin. Please see YAYA as Plugin's permissions for that file.)
 
-(The plugin may receive updates over time, so if you bundle it with a ghost be aware that it may become out of date.)
+The plugin may receive updates over time, so if you bundle it with a ghost be aware that it may become out of date.
 
 
 Weather Station v1.0.5
