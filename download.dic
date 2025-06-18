@@ -81,7 +81,8 @@ OnGetCurrentWeather
 			
 			foreach ForecastDayTags; _tag
 			{
-				EVAL("Forecast.%(_i).Day.%(REPLACE(_tag,'-','_')) = TOSTR(ExtractXML(_day,_tag))")
+				_tag = REPLACE(_tag,'-','_')
+				EVAL("Forecast.%(_i).Day.%(_tag) = TOSTR(ExtractXML(_day,_tag))")
 			}
 			
 			//----------- Astro -----------
@@ -90,7 +91,8 @@ OnGetCurrentWeather
 			
 			foreach ForecastAstroTags; _tag
 			{
-				EVAL("Forecast.%(_i).Astro.%(REPLACE(_tag,'-','_')) = TOSTR(ExtractXML(_astro,_tag))")
+				_tag = REPLACE(_tag,'-','_')
+				EVAL("Forecast.%(_i).Astro.%(_tag) = TOSTR(ExtractXML(_astro,_tag))")
 			}
 			
 			//----------- Hour -----------
@@ -105,9 +107,9 @@ OnGetCurrentWeather
 				_temp = IARRAY
 				foreach ForecastHourTags; _tag
 				{
-					EVAL("_temp ,= TOSTR(ExtractXML(_hour,_tag))")
+					_temp ,= TOSTR(ExtractXML(_hour,_tag)
 				}
-				EVAL("Forecast.%(_i).Hour.%(_ii) = '%(_temp)'")
+				EVAL("Forecast.%(_i).Hour.%(_ii) = _temp")
 				_ii++
 			}
 		}
