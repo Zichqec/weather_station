@@ -1,6 +1,8 @@
 This information should also be available on the external SHIORI events page of Ukadoc! https://ukagakadreamteam.github.io/ukadoc/manual/list_shiori_event_ex.html
 
 —————————— OnWeatherStation.Weather ——————————
+This event is sent every hour on the hour, every time a ghost boots, and any time a ghost calls it with the \![raiseplugin] SakuraScript tag.
+No matter how it is called, it is always sent to all open ghosts.
 
 reference0: Weather condition. Please download this file https://www.weatherapi.com/docs/weather_conditions.xml for the full list of condition names.
 reference1: Weather condition icon filename. This can be used if you download weatherapi's weather icons from here https://cdn.weatherapi.com/weather.zip
@@ -40,13 +42,18 @@ reference34: UK Defra Index. See weatherapi.com's documentation for the table of
 reference35: The user's choice of units (Imperial or Metric).
 reference36: The time the plugin last updated the weather data, in seconds since EPOCH (1970/1/1 00:00:00).
 reference37: The current version number of the plugin.
-reference38: The user's location name. Only available if the user has chosen to share their location data.
-reference39: The url for the user's location, to be used with the API. Only available if the user has chosen to share their location data.
-reference40: The user's latitude. Only available if the user has chosen to share their location data.
-reference41: The user's longitude. Only available if the user has chosen to share their location data.
+reference38: <Deprecated>
+reference39: <Deprecated>
+reference40: <Deprecated>
+reference41: <Deprecated>
 
 
 —————————— OnWeatherStation.Astro ——————————
+An event containing astronomy data such as the sunrise time, moon phase, and illumination of the moon as a percentage.
+This event is sent out only when specifically called by a ghost using \![raiseplugin].
+It is sent to all open ghosts at once, regardless of which one called it.
+You can include an argument to specify which day's data it should return. 0 for today, 1 for tomorrow, and 2 for the day after tomorrow.
+Example: \![raiseplugin,Weather Station,OnWeatherStation.Astro,0]
 
 reference0: The day the following information is for. 0 for today, 1 for tomorrow, 2 for the day after tomorrow.
 reference1: Sunrise time, given as 12 hour time with the format ##:## *M
@@ -71,6 +78,10 @@ reference11: Moon illumination as a percentage.
 
 
 —————————— OnWeatherStation.Alerts ——————————
+An event containing weather alerts for the user's location, including what type of alert, how severe it is, how long until it expires, etc. This event returns as many references as there are alerts.
+This event is sent out only when specifically called by a ghost using \![raiseplugin].
+It is sent to all open ghosts at once, regardless of which one called it.
+Example: \![raiseplugin,Weather Station,OnWeatherStation.Alerts]
 
 reference*: An array containing information for a weather alert. NOT ALL FIELDS WILL BE FILLED. Fields are separated by a 1 byte value (C_BYTE1 in YAYA), since the descriptions sometimes contain commas. Information is listed in this order:
 	[0] - Headline.
@@ -91,6 +102,11 @@ Please see weatherapi's documentation on weather alerts for more information (I 
 
 
 —————————— OnWeatherStation.Forecast.Day ——————————
+An event containing forecast data. Similar to the main weather data, except it includes averages across the day, doesn't include air quality data, and of course you can look at days in the future.
+This event is sent out only when specifically called by a ghost using \![raiseplugin].
+It is sent to all open ghosts at once, regardless of which one called it.
+You can include an argument to specify which day's data it should return. 0 for today, 1 for tomorrow, and 2 for the day after tomorrow.
+Example: \![raiseplugin,Weather Station,OnWeatherStation.Forecast.Day,0]
 
 reference0: The day the information is for. 0 for today, 1 for tomorrow, 2 for the day after tomorrow.
 reference1: Maximum temperature for the day, in Fahrenheit.
@@ -113,6 +129,11 @@ reference17: Average visiblity for the day, in kilometers.
 
 
 —————————— OnWeatherStation.Forecast.Hourly ——————————
+An event containing forecast data. Similar to the daily forecast data, except it is broken down by hour. This event sends 24 arrays, one for each hour of data.
+This event is sent out only when specifically called by a ghost using \![raiseplugin].
+It is sent to all open ghosts at once, regardless of which one called it.
+You can include an argument to specify which day's data it should return. 0 for today, 1 for tomorrow, and 2 for the day after tomorrow.
+Example: \![raiseplugin,Weather Station,OnWeatherStation.Forecast.Hourly,0]
 
 reference0-23: An array containing forecast information for the hour matching the reference number. (reference0 for 00:00/12AM, reference 14 for 14:00/2PM.) Information is listed in this order:
 	[0] - Date and time the information is for.
@@ -150,6 +171,8 @@ reference24: The day the information is for. 0 for today, 1 for tomorrow, 2 for 
 
 
 —————————— OnWeatherStation.Error ——————————
+If an error occurs in one of the above events, this event will occur instead to indicate what sort of problem there was.
+It is sent to all open ghosts at once, regardless of how it occurred.
 
 reference0: The error message. Possible messages are:
 	"no_location" for if the user has not entered a location.
@@ -157,7 +180,7 @@ reference0: The error message. Possible messages are:
 	"api_quota_exceeded" for if the 1 million free API calls have run out for the month.
 	"api_key_disabled" for if I ever have to disable the API key.
 	"api_internal_error" for if the API has an error on its end.
-	"no_api_response" for if the API does not respond at all. This can indicate a problem with weatherapi.com, an issue with the SAORI, or the user may be offline.
+	"no_api_response" for if the API does not respond at all. This can indicate a problem with weatherapi.com, an issue with the SAORI, or the user may be offline. (Note: I am hoping to find a way in the future to indicate that the user is definitely offline, so this specification may be adjusted.)
 	"other" for any other error. reference1 will have the proper error message in this case, but this should not come up.
 reference1: A more verbose error message. THIS DOES NOT MATCH THE MESSAGES ON weatherapi.com's DOCUMENTATION. I could not find a list of what the error messages would actually be.
 reference2: The error code, as listed on weatherapi.com's documentation.

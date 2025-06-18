@@ -1,0 +1,219 @@
+/*
+
+This file handles distributing the weather data to ghosts. All of the events that are documented in event_reference.txt / Ukadoc are handled here.
+
+*/
+
+//For ghosts to request the current weather if they don't have it for some reason
+OnWeatherStation.Weather
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	//res_event_option = "notify"
+
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Weather" //Calls this event in the ghost if it exists
+	//res_marker = version //Send the little text on the bottom of the balloon that says it's from this plugin
+	
+	res_reference[0] = Weather.condition
+	res_reference[1] = Weather.condition_icon
+	res_reference[2] = Weather.condition_code
+	res_reference[3] = Weather.is_day
+	res_reference[4] = Weather.temp_f
+	res_reference[5] = Weather.temp_c
+	res_reference[6] = Weather.feelslike_f
+	res_reference[7] = Weather.feelslike_c
+	res_reference[8] = Weather.humidity
+	res_reference[9] = Weather.wind_mph
+	res_reference[10] = Weather.wind_kph
+	res_reference[11] = Weather.wind_dir
+	res_reference[12] = Weather.wind_degree
+	res_reference[13] = Weather.gust_mph
+	res_reference[14] = Weather.gust_kph
+	res_reference[15] = Weather.precip_in
+	res_reference[16] = Weather.precip_mm
+	res_reference[17] = Weather.cloud
+	
+	//Yes, these are the same as you can get from the forecast, but I figure this will be easier for people
+	res_reference[18] = Forecast.0.Day.daily_will_it_rain
+	res_reference[19] = Forecast.0.Day.daily_chance_of_rain
+	res_reference[20] = Forecast.0.Day.daily_will_it_snow
+	res_reference[21] = Forecast.0.Day.daily_chance_of_snow
+	
+	res_reference[22] = Weather.vis_miles
+	res_reference[23] = Weather.vis_km
+	res_reference[24] = Weather.pressure_in
+	res_reference[25] = Weather.pressure_mb
+	res_reference[26] = Weather.uv
+	
+	//Air quality
+	res_reference[27] = Weather.co
+	res_reference[28] = Weather.no2
+	res_reference[29] = Weather.o3
+	res_reference[30] = Weather.so2
+	res_reference[31] = Weather.pm2_5
+	res_reference[32] = Weather.pm10
+	res_reference[33] = Weather.us_epa_index //_ not - here
+	res_reference[34] = Weather.gb_defra_index
+	
+	res_reference[35] = Settings.units
+	res_reference[36] = Info.last_update[5]
+	res_reference[37] = version_num
+	//res_reference[36] = Settings.weather_interval //Currently not in use
+	
+	//res_reference[38] //Deprecated
+	//res_reference[39] //Deprecated
+	//res_reference[40] //Deprecated
+	//res_reference[41] //Deprecated
+}
+
+//For ghosts requesting the current astronomy data
+//reference0 is the current day
+OnWeatherStation.Astro
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Astro"
+	
+	if !(reference[0] == "0" || reference[0] == "1" || reference[0] == "2"); reference[0] = "0" //If no valid day is specified, use today
+	
+	res_reference[0] = reference[0]
+	
+	_sunrise = EVAL("Forecast.%(reference[0]).Astro.sunrise")
+	_sunset = EVAL("Forecast.%(reference[0]).Astro.sunset")
+	_moonrise = EVAL("Forecast.%(reference[0]).Astro.moonrise")
+	_moonset = EVAL("Forecast.%(reference[0]).Astro.moonset")
+	
+	res_reference[1] = _sunrise
+	res_reference[2] = _sunset
+	res_reference[3] = _moonrise
+	res_reference[4] = _moonset
+	
+	res_reference[5] = Twelve_to_24(_sunrise)
+	res_reference[6] = Twelve_to_24(_sunset)
+	res_reference[7] = Twelve_to_24(_moonrise)
+	res_reference[8] = Twelve_to_24(_moonset)
+	
+	EVAL("res_reference[9] = Forecast.%(reference[0]).Astro.moon_phase")
+	res_reference[10] = PhaseNum
+	EVAL("res_reference[11] = Forecast.%(reference[0]).Astro.moon_illumination")
+}
+
+//For ghosts requesting the current daily forecast data
+//reference0 is the current day
+OnWeatherStation.Forecast.Day
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	if !(reference[0] == "0" || reference[0] == "1" || reference[0] == "2"); reference[0] = "0" //If no valid day is specified, use today
+	
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Forecast.Day"
+	
+	res_reference[0] = reference[0]
+	
+	_ref = 1
+	for _i = 0; _i < ARRAYSIZE(ForecastDayTags); _i++
+	{
+		_tag = ForecastDayTags[_i]
+		EVAL("res_reference[%(_ref)] = Forecast.%(reference[0]).Day.%(_tag)")
+		_ref++
+	}
+}
+
+//For ghosts requesting the current hourly forecast data
+//reference0 is the current day
+OnWeatherStation.Forecast.Hourly
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	if !(reference[0] == "0" || reference[0] == "1" || reference[0] == "2"); reference[0] = "0" //If no valid day is specified, use today
+	
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Forecast.Hourly"
+	
+	_ref = 0
+	for _i = 0; _i < 24; _i++
+	{
+		EVAL("res_reference[%(_ref)] = TOSTR(Forecast.%(reference[0]).Hour.%(_i))")
+		_ref++
+	}
+	
+	res_reference[24] = reference[0]
+}
+
+//For ghosts requesting the current weather alerts
+//This is its own function purely because it needed to be a 2d array, and there are commas in the descriptions... Sorry AYA users, please upgrade to YAYA
+OnWeatherStation.Alerts
+{
+	if Info.error_code != ""; {OnWeatherStation.Error; return}
+	elseif !CanGetWeather; {OnWeatherStation.Error("no_location"); return}
+	
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Alerts"
+	
+	
+	for _i = 0; _i < ARRAYSIZE(Weather.alerts); _i++
+	{
+		EVAL("res_reference[%(_i)] = TOSTR(Weather.alerts[%(_i)])")
+	}
+}
+
+OnWeatherStation.Error
+{
+	res_target = "__SYSTEM_ALL_GHOST__" //Sends this to all open ghosts
+	res_event = "OnWeatherStation.Error"
+	
+	_short = ""
+	_msg = Info.error_message
+	_code = Info.error_code
+	
+	
+	if Info.error_code == "1003"; _short = "no_location"
+	elseif Info.error_code == "1006"; _short = "location_invalid"
+	elseif Info.error_code == "2007"; _short = "api_quota_exceeded"
+	elseif Info.error_code == "2008"; _short = "api_key_disabled"
+	elseif Info.error_code == "9999"; _short = "api_internal_error"
+	elseif Info.error_code == "99999"; _short = "no_api_response"
+	else; _short = "other"
+	
+	if _argv[0] == "no_location"
+	{
+		_short = _argv[0]
+		_msg = "No matching location found."
+		_code = "1006"
+	}
+	
+	res_reference[0] = _short
+	res_reference[1] = _msg
+	res_reference[2] = _code
+	
+	res_reference[3] = Info.last_update[5]
+	res_reference[4] = version_num
+	res_reference[5] = Info.update_available
+}
+
+OnGhostBoot
+{
+	//OnGetCurrentWeather //TODO should it be running this for every ghost boot...? I think it should just give the existing data. I know that when the plugin starts, it runs this event once for every booted ghost... that could be the reason for lag spikes?
+	OnWeatherStation.Weather
+}
+
+OnSecondChange
+{
+	if Info.Send_Weather_Now
+	{
+		Info.Send_Weather_Now = 0
+		OnWeatherStation.Weather
+		//No point sending anything but this one since it would only send one day of forecast anyhow...
+	}
+	elseif second == 0 && minute == 0 //&& minute % Settings.weather_interval == 0
+	{
+		OnGetCurrentWeather
+	}
+}

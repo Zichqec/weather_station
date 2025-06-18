@@ -1,0 +1,152 @@
+/*
+
+This file handles downloading weather data from the API, parsing the XML tags, and saving everything to the appropriate variables.
+Even though weather data (other than the main data) is only sent out when requested, all of it is downloaded in one go.
+
+*/
+
+//Can apparently also run this without arguments to test if an internet connection is available. Very useful! ...If I'm moving my website, I need to keep this in mind... | I think this note was for the httpc saori...
+//Update: while that is a functionality of the SAORI, it doesn't appear to work properly for me... it just always outputs a 1
+OnGetCurrentWeather
+{
+	_location = "(Not set)"
+	if UserInfo.location != ""; _location = UserInfo.location
+	if _location == "(Not set)"; return
+	
+	//Request info from the API
+	Info.error_code = ""
+	Info.error_message = ""
+	_api = FUNCTIONEX("saori/httpc.dll","http://api.weatherapi.com/v1/forecast.xml?key=__API_KEY__&q=%(UserInfo.location_url)&aqi=yes&days=3&alerts=yes")
+	
+	//Update the last updated time
+	Info.last_update[0] = hour
+	Info.last_update[1] = nowhour
+	Info.last_update[2] = nowmin
+	Info.last_update[3] = nowsec
+	if ampm == 1; Info.last_update[4] = "PM"
+	else; Info.last_update[4] = "AM"
+	Info.last_update[5] = GETSECCOUNT
+	
+	if "<error>" _in_ _api //If there's an error, let the user know and clear the weather info
+	{
+		Info.error_code = TOSTR(ExtractXML(_api,"code"))
+		Info.error_message = ExtractXML(_api,"message")
+		ClearWeatherData
+		CheckForUpdates //If there's an error, check for an update because an update might fix it...
+	}
+	elseif _api == ""
+	{
+		//TODO if and when I get the ability I would like to make this check if you have an internet connection, and if not, give a different answer...
+		Info.error_code = "99999"
+		Info.error_message = "No API response"
+		ClearWeatherData
+		CheckForUpdates //If there's an error, check for an update because an update might fix it...
+	}
+	else
+	{
+		//Extracting info from the XML file the API sent. ExtractXML here pulls out the data from between the XML tags so that we can get what we need. Starts by breaking it into big chunks, then looping through lists of tags and pulling out the info between each one.
+		//The EVAL tags here are mostly to help with the forecast days, where there are 72 arrays to deal with. Basically it can make variables on the fly, using the numbers for the day and hour to give them the proper names
+		
+		//================ CURRENT WEATHER ================
+		_current = ExtractXML(_api,"current")
+		
+		foreach CurrentWeatherTags; _tag
+		{
+
+			EVAL("Weather.%(REPLACE(_tag,'-','_')) = TOSTR(ExtractXML(_current,_tag))")
+		}
+		
+		//Doing condition separately since it has subcategories
+		_condition = ExtractXML(_current,"condition")
+
+		Weather.condition = ExtractXML(_condition,"text")
+		Weather.condition_icon = ExtractXML(_condition,"icon")
+		Weather.condition_code = ExtractXML(_condition,"code")
+		
+		//================ FORECAST ================
+
+		_forecastdays = ExtractXML(_api,"forecastday")
+		
+		//Loop for each of the 3 days of forecast data
+		for _i = 0; _i < 3; _i++
+		{
+			//These two are on their own above the rest of the forecast data
+			EVAL("Forecast.%(_i).Day.date = '%(ExtractXML(_forecastdays[_i],'date'))'")
+			EVAL("Forecast.%(_i).Day.date_epoch = ExtractXML(_forecastdays[_i],'date_epoch')")
+			
+			//----------- Day -----------
+			_day = ExtractXML(_forecastdays[_i],"day")
+			
+			foreach ForecastDayTags; _tag
+			{
+				_tag = REPLACE(_tag,'-','_')
+				EVAL("Forecast.%(_i).Day.%(_tag) = TOSTR(ExtractXML(_day,_tag))")
+			}
+			
+			//----------- Astro -----------
+			
+			_astro = ExtractXML(_forecastdays[_i],"astro")
+			
+			foreach ForecastAstroTags; _tag
+			{
+				_tag = REPLACE(_tag,'-','_')
+				EVAL("Forecast.%(_i).Astro.%(_tag) = TOSTR(ExtractXML(_astro,_tag))")
+			}
+			
+			//----------- Hour -----------
+			
+			_hours = ExtractXML(_forecastdays[_i],"hour")
+			
+			//Loop for each of the 24 hours in each day
+			_ii = 0
+			foreach _hours; _hour
+			{
+				EVAL("Forecast.%(_i).Hour.%(_ii) = IARRAY")
+				_temp = IARRAY
+				foreach ForecastHourTags; _tag
+				{
+					_temp ,= TOSTR(ExtractXML(_hour,_tag))
+				}
+				EVAL("Forecast.%(_i).Hour.%(_ii) = _temp")
+				_ii++
+			}
+		}
+		
+		//================ ALERTS ================
+		
+		Weather.alerts = IARRAY
+		if "<alert>" _in_ _api
+		{
+			_alerts = ExtractXML(_api,"alert")
+			
+			foreach _alerts; _alert
+			{
+				LOGGING("ALERT %(_alert)")
+				_temp = ""
+				foreach AlertTags; _tag
+				{
+					_getinfo = ExtractXML(_alert,_tag)
+					if _temp != ""; _temp += C_BYTE1
+					_temp += _getinfo
+				}
+				Weather.alerts ,= _temp
+				
+			}
+		}
+	}
+	Info.Send_Weather_Now = 1 //Makes OnSecondChange send the weather data since it's a bit wonky if you just go straight to it
+}
+
+CheckForUpdates
+{
+	Info.update_available = 0
+	_t = FUNCTIONEX("saori/httpc.dll","https://zichqec.github.io/s-the-skeleton/weatherregex")
+	_ver = SPLIT(_t,"WEATHER_STATION_VER--")[1]
+	_ver = SPLIT(_ver,"--WEATHER_STATION_VER")[0]
+	if _ver != ""
+	{
+		if _ver != version_num; Info.update_available = 1
+	}
+	LOGGING(_ver)
+	LOGGING(version_num)
+}

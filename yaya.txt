@@ -23,8 +23,11 @@ charset.extension, UTF-8
 //------------------------------------------------------------------------------
 
 dic, yaya_plugin2.dic
-dic, main.dic
-dic, envelopes.dic
+dic, key.dic
+dic, utility.dic
+dic, menu.dic
+dic, download.dic
+dic, distribute.dic
 
 //------------------------------------------------------------------------------
 //é¿çsÉçÉO

@@ -1,0 +1,33 @@
+/*
+
+This file contains the API key. Please read the comments below if you're intending to copy/adapt this code into your own ghost.
+
+*/
+
+
+
+//=========================================================================
+//============= USING THIS CODE IN YOUR OWN GHOST? READ BELOW =============
+//=========================================================================
+
+/*
+Glad you find it interesting/useful! You are welcome to copy any of the code from the following files to use in your own ghosts.
+
+key.dic
+utility.dic
+menu.dic
+download.dic
+distribute.dic
+
+The other files come with YAYA as Plugin, so please check the permissions specified by YAYA as Plugin.
+
+If you want to bundle the plugin with your ghost: that's perfectly fine, feel free to do so. Just note that it may become out of date over time.
+
+If you want to integrate this code into your ghost: that's also fine. Please credit me in your ghost's readme, with a link back to my site! https://ukagaka.zichqec.com/
+
+If you take the code from the plugin and integrate it directly into your ghost's code (rather than just bundling the plugin), **please do not use my API key.** The free plan only allows 1 million API calls per month, so if you're taking the code out of the plugin and using it in your own project, I think it only makes sense to get your own key to spread out the load. You can get a completely free API key by signing up for Weather API here: https://www.weatherapi.com/
+
+**Please DO NOT modify (or encourage users to modify) the API key in the original plugin.** I do not allow modifications of the plugin itself to be distributed, nor do I want to abuse a service that I am making use of at no cost. My request that you get your own API key *only* applies if you are integrating the code into *your own ghost*, because that would make them two different "applications", so to say.
+*/
+
+#globaldefine __API_KEY__ 08f40be4a6fb4edd9d361756211508
