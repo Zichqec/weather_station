@@ -55,8 +55,10 @@ OnWeatherStation.Weather
 	res_reference[37] = version_num
 	//res_reference[36] = Settings.weather_interval //Currently not in use
 	
-	//38-41 USED to contain the user's location data IF that setting was toggled on. I've removed it due to privacy concerns, I just don't think there is a good reason to share this data with a ghost
-	//I may leave a space here if I add future arguments, or I may not... hm
+	//res_reference[38] //Deprecated
+	//res_reference[39] //Deprecated
+	//res_reference[40] //Deprecated
+	//res_reference[41] //Deprecated
 }
 
 //For ghosts requesting the current astronomy data
