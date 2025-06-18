@@ -205,7 +205,7 @@ OnSecondChange
 		OnWeatherStation.Weather
 		//No point sending anything but this one since it would only send one day of forecast anyhow...
 	}
-	elseif second == 0 && minute % Settings.weather_interval == 0
+	elseif second == 0 && minute == 0 //&& minute % Settings.weather_interval == 0
 	{
 		OnGetCurrentWeather
 	}
