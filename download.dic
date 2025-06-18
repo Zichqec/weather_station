@@ -36,12 +36,10 @@ OnGetCurrentWeather
 	}
 	elseif _api == ""
 	{
+		//TODO if and when I get the ability I would like to make this check if you have an internet connection, and if not, give a different answer...
 		Info.error_code = "99999"
 		Info.error_message = "No API response"
 		ClearWeatherData
-		// _internetcheck = FUNCTIONEX("saori/httpc.dll")
-		// LOGGING("====================================================================")
-		// LOGGING("_internetcheck: %(_internetcheck)")
 		CheckForUpdates //If there's an error, check for an update because an update might fix it...
 	}
 	else
@@ -127,10 +125,8 @@ OnGetCurrentWeather
 				_temp = ""
 				foreach AlertTags; _tag
 				{
-					//LOGGING("TAG %(_TAG)") //lol this is written with the wrong var name anyways
 					_getinfo = ExtractXML(_alert,_tag)
 					if _temp != ""; _temp += C_BYTE1
-					//EVAL("_temp += '%(_getinfo)'") //Having this here makes it break if there's a ' in the name..... but apparently I don't need this EVAL? Idk
 					_temp += _getinfo
 				}
 				Weather.alerts ,= _temp
